@@ -1,7 +1,7 @@
 # Проект «Большое путешествие»
 
 * Студент: [Григорий Полещук](https://up.htmlacademy.ru/ecmascript/15/user/1448543).
-* Наставник: `Неизвестно`.
+* Наставник: [Виктор Кан](https://htmlacademy.ru/profile/viktorkan).
 
 ---
 
