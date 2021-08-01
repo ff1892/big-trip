@@ -1,12 +1,13 @@
-import {createRouteTemplate} from './view/route';
-import {createTotalCostTemplate} from './view/total-cost';
-import {createMenuTemplate} from './view/menu';
-import {createFiltersTemplate} from './view/filters';
-import {createSortingTemplate} from './view/sorting';
-import {createEventsListTemplate} from './view/events-list';
-import {createEditPointTemplate} from './view/point-edit';
-import {createPointTemplate} from './view/point';
-import {createNewPointTemplate} from './view/point-new';
+import {createRouteTemplate} from './view/route.js';
+import {createTotalCostTemplate} from './view/total-cost.js';
+import {createMenuTemplate} from './view/menu.js';
+import {createFiltersTemplate} from './view/filters.js';
+import {createSortingTemplate} from './view/sorting.js';
+import {createEventsListTemplate} from './view/events-list.js';
+import {createEditPointTemplate} from './view/point-edit.js';
+import {createPointTemplate} from './view/point.js';
+import {createNewPointTemplate} from './view/point-new.js';
+import './point.js';
 
 const siteHeader = document.querySelector('.page-header');
 const mainTrip = siteHeader.querySelector('.trip-main');
