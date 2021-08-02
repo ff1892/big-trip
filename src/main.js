@@ -7,7 +7,7 @@ import {createEventsListTemplate} from './view/events-list.js';
 import {createEditPointTemplate} from './view/point-edit.js';
 import {createPointTemplate} from './view/point.js';
 import {createNewPointTemplate} from './view/point-new.js';
-import './point.js';
+import './mock/point.js';
 
 const siteHeader = document.querySelector('.page-header');
 const mainTrip = siteHeader.querySelector('.trip-main');

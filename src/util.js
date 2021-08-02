@@ -8,11 +8,11 @@ const getRandomArrayValue = (array) => array[getRandomInteger(0, array.length - 
 
 const getShuffledArray = (array) => {
   const shuffledArrayCopy = [...array];
-  return shuffledArrayCopy.sort((a, b) => getRandomInteger(0, 2) - 1);
+  return shuffledArrayCopy.sort(() => getRandomInteger(0, 2) - 1);
 };
 
 export {
   getRandomInteger,
   getRandomArrayValue,
   getShuffledArray
-}
+};
