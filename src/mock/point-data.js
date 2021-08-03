@@ -1,12 +1,12 @@
 import dayjs from 'dayjs';
 import {getRandomInteger, getRandomArrayValue} from '../util.js';
 import {generateDestination} from './point-destination.js';
-import {EVENT_TYPES, getOffersForEvent} from './point-offer.js';
+import {EVENT_TYPES, getChoosenOffers} from './point-offer.js';
 
 const DESTINATIONS = ['Rome', 'Naples', 'Venice', 'Turin', 'Palermo', 'Florenze'];
 const MIN_PRICE = 1;
 const MAX_PRICE = 500;
-const DAYS_GAP = 5;
+const DAYS_GAP = 2;
 const HOURS_GAP = 5;
 const MINUTES_GAP = 50;
 
@@ -27,8 +27,8 @@ const generateDate = () => {
     dateMin = dayjs().add(getHoursDifference(), 'hours').add(getMinutesDifference(), 'minutes').toDate(),
     dateMax = dayjs().add(getHoursDifference(), 'hours').add(getMinutesDifference(), 'minutes').toDate()
   ) : (
-    dateMin = dayjs().add(getDaysDifference(), 'days').add(getHoursDifference(), 'hours').toDate(),
-    dateMax = dayjs().add(getDaysDifference(), 'days').add(getHoursDifference(), 'hours').toDate()
+    dateMin = dayjs().add(getDaysDifference(), 'days').add(getHoursDifference(), 'hours').add(getMinutesDifference(), 'minutes').toDate(),
+    dateMax = dayjs().add(getDaysDifference(), 'days').add(getHoursDifference(), 'hours').add(getMinutesDifference(), 'minutes').toDate()
   );
 
   if (dateMin > dateMax) {
@@ -55,7 +55,7 @@ const generatePoint = (id) => {
     dateFrom: date.min,
     dateTo: date.max,
     isFavorite: Boolean(getRandomInteger()),
-    offers: getOffersForEvent(type),
+    offers: getChoosenOffers(type),
     destination: generateDestination(destinationName),
   };
   return point;

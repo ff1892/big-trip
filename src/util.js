@@ -18,8 +18,6 @@ const getShuffledArray = (array) => {
   return shuffledArrayCopy.sort(() => getRandomInteger(0, 2) - 1);
 };
 
-
-
 const getHumanizedDuration = (startDate, endDate) => {
   const eventInMinutes = dayjs(endDate).diff(startDate, 'minutes');
   const eventDuration = dayjs.duration(dayjs(endDate).diff(startDate));
@@ -40,6 +38,7 @@ const getHumanizedDate = (date) => dayjs(date).format('MMM DD').toUpperCase();
 const getDateAttribute = (date) => dayjs(date).format('YYYY-MM-DD');
 const getDateTimeAttribute = (date) => dayjs(date).format('YYYY-MM-DDTHH:mm');
 
+const getLastWordFromString = (string)=> string.split(' ').slice(-1);
 
 
 export {
@@ -52,4 +51,5 @@ export {
   getHumanizedDate,
   getDateAttribute,
   getDateTimeAttribute,
+  getLastWordFromString,
 };
