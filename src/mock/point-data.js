@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
-import {getRandomInteger, getRandomArrayValue} from '../util.js';
+import {getRandomInteger, getRandomArrayValue, generateOrNot} from '../util.js';
 import {generateDestination} from './point-destination.js';
-import {EVENT_TYPES, getChoosenOffers} from './point-offer.js';
+import {EVENT_TYPES, getOffersForEvent, getChoosenOffers} from './point-offer.js';
 
 const DESTINATIONS = ['Rome', 'Naples', 'Venice', 'Turin', 'Palermo', 'Florenze'];
 const MIN_PRICE = 1;
@@ -9,6 +9,8 @@ const MAX_PRICE = 500;
 const DAYS_GAP = 2;
 const HOURS_GAP = 5;
 const MINUTES_GAP = 50;
+const POINTS_COUNT = 10;
+const EVENT_DAFULT = 'flight';
 
 const getDestinationName = () => getRandomArrayValue(DESTINATIONS);
 const getEventType = () => getRandomArrayValue(EVENT_TYPES);
@@ -56,13 +58,34 @@ const generatePoint = (id) => {
     dateTo: date.max,
     isFavorite: Boolean(getRandomInteger()),
     offers: getChoosenOffers(type),
-    destination: generateDestination(destinationName),
+    destination: generateOrNot(generateDestination, destinationName),
   };
   return point;
 };
 
 const generateData = (pointsCount) => new Array(pointsCount).fill().map((value, index) => generatePoint(index + 1));
-
 const sortPointsByDate = (points) => points.sort((pointOne, pointTwo) => pointOne.dateFrom - pointTwo.dateFrom);
 
-export {generateData, sortPointsByDate};
+const points = generateData(POINTS_COUNT);
+const pointsSortedByDate = sortPointsByDate(points);
+
+const startTime = pointsSortedByDate[0].dateFrom;
+const endTime = pointsSortedByDate[pointsSortedByDate.length - 1].dateTo;
+
+const getPointDefault = () => (
+  {
+    id: points.length + 1,
+    type: EVENT_DAFULT,
+    name: '',
+    price: '',
+    dateFrom: dayjs(endTime).add(HOURS_GAP, 'hours').toDate(),
+    dateTo: dayjs(endTime).add(HOURS_GAP + 1, 'hours').toDate(),
+    isFavorite: false,
+    offers: '',
+    destination: '',
+  }
+);
+
+const pointDefault = getPointDefault();
+
+export {DESTINATIONS, pointsSortedByDate, pointDefault, startTime, endTime};

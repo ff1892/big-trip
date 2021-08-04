@@ -8,11 +8,9 @@ import {createEventsListTemplate} from './view/events-list.js';
 import {createEditPointTemplate} from './view/point-edit.js';
 import {createPointTemplate} from './view/point.js';
 import {createNewPointTemplate} from './view/point-new.js';
-import {generateData, sortPointsByDate} from './mock/point-data.js';
+import {pointsSortedByDate, pointDefault} from './mock/point-data.js';
 
-const POINTS_COUNT = 10;
-const points = generateData(POINTS_COUNT);
-const pointsSortedByDate = sortPointsByDate(points);
+
 
 const siteHeader = document.querySelector('.page-header');
 const mainTrip = siteHeader.querySelector('.trip-main');
@@ -40,7 +38,7 @@ const tripEventsList = tripEventsSection.querySelector('.trip-events__list');
 render(tripEventsList, createEditPointTemplate(pointsSortedByDate[0]), 'beforeend');
 render(tripEventsList, createPointTemplate(pointsSortedByDate[1]), 'beforeend');
 render(tripEventsList, createPointTemplate(pointsSortedByDate[2]), 'beforeend');
-render(tripEventsList, createNewPointTemplate(), 'beforeend');
+render(tripEventsList, createNewPointTemplate(pointDefault), 'beforeend');
 
 const generateRoute = (points) => {
   const destinations = new Array(points.length).fill().map((value, index) => points[index].name);

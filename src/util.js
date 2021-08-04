@@ -40,6 +40,11 @@ const getDateTimeAttribute = (date) => dayjs(date).format('YYYY-MM-DDTHH:mm');
 
 const getLastWordFromString = (string)=> string.split(' ').slice(-1);
 
+const generateOrNot = (generatingFunction, generatingFunctionArgument) => {
+  const random = getRandomInteger();
+  return random === 1 ? generatingFunction(generatingFunctionArgument) : '';
+};
+
 
 export {
   getRandomInteger,
@@ -52,4 +57,5 @@ export {
   getDateAttribute,
   getDateTimeAttribute,
   getLastWordFromString,
+  generateOrNot,
 };
