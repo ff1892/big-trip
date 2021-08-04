@@ -1,4 +1,4 @@
-import {getHumanizedDuration, getNumeralDate, getTimefromDate, getDateAttribute, getDateTimeAttribute, getHumanizedDate} from '../util.js';
+import {getHumanizedDuration, getTimefromDate, getDateAttribute, getDateTimeAttribute, getHumanizedDate} from '../util.js';
 
 export const createPointTemplate = (point) => {
   const {type, name, isFavorite, dateFrom, dateTo, price, offers} = point;
@@ -8,24 +8,22 @@ export const createPointTemplate = (point) => {
     [false, ''],
   ]);
 
-  const createSelectedOffersTemplate = (offers) => {
+  const createSelectedOffersTemplate = (offersList) => {
     let selectedOffers = '';
-    for (const offer of offers) {
+    for (const offer of offersList) {
       selectedOffers += `<li class="event__offer">
       <span class="event__offer-title">${offer.title}</span>
       &plus;&euro;&nbsp;
       <span class="event__offer-price">${offer.price}</span>
-      </li>`
+      </li>`;
     }
     return `<h4 class="visually-hidden">Offers:</h4>
     <ul class="event__selected-offers">
     ${selectedOffers}
-    </ul>`
-  }
+    </ul>`;
+  };
 
-  const renderSelectedOffers = (offers) => {
-    return (offers.length) ? createSelectedOffersTemplate(offers) : '';
-  }
+  const renderSelectedOffers = (offersList) => (offersList.length) ? createSelectedOffersTemplate(offersList) : '';
 
   return `<li class="trip-events__item">
     <div class="event">
@@ -56,5 +54,5 @@ export const createPointTemplate = (point) => {
         <span class="visually-hidden">Open event</span>
       </button>
     </div>
-  </li>`
+  </li>`;
 };

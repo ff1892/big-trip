@@ -1,4 +1,3 @@
-import dayjs from 'dayjs';
 import {createRouteTemplate} from './view/route.js';
 import {createTotalCostTemplate} from './view/total-cost.js';
 import {createMenuTemplate} from './view/menu.js';
@@ -9,8 +8,6 @@ import {createEditPointTemplate} from './view/point-edit.js';
 import {createPointTemplate} from './view/point.js';
 import {createNewPointTemplate} from './view/point-new.js';
 import {pointsSortedByDate, pointDefault} from './mock/point-data.js';
-
-
 
 const siteHeader = document.querySelector('.page-header');
 const mainTrip = siteHeader.querySelector('.trip-main');
@@ -36,42 +33,9 @@ render(tripEventsSection, createEventsListTemplate(), 'beforeend');
 
 const tripEventsList = tripEventsSection.querySelector('.trip-events__list');
 render(tripEventsList, createEditPointTemplate(pointsSortedByDate[0]), 'beforeend');
-render(tripEventsList, createPointTemplate(pointsSortedByDate[1]), 'beforeend');
-render(tripEventsList, createPointTemplate(pointsSortedByDate[2]), 'beforeend');
+
+for (let i = 0; i < pointsSortedByDate.length; i++) {
+  render(tripEventsList, createPointTemplate(pointsSortedByDate[i]), 'beforeend');
+}
+
 render(tripEventsList, createNewPointTemplate(pointDefault), 'beforeend');
-
-const generateRoute = (points) => {
-  const destinations = new Array(points.length).fill().map((value, index) => points[index].name);
-  const firstDestination = destinations[0];
-  const lastDestination = destinations[destinations.length - 1];
-  const divider = '&mdash;'
-  const uniqueDestinations = new Set(destinations);
-
-  const getAnotherDestination = (destinationsCount = 2) => {
-    uniqueDestinations.delete(firstDestination);
-
-    if (destinationsCount === 3) {
-    uniqueDestinations.delete(lastDestination)
-    }
-
-    const middleDestination = Array.from(uniqueDestinations);
-    return middleDestination[0];
-  };
-
-  switch (uniqueDestinations.size) {
-    case 1:
-      return firstDestination;
-    case 2:
-      if (firstDestination !== lastDestination) {
-        return `${firstDestination} ${divider} ${lastDestination}`;
-      }
-      return `${firstDestination} ${divider} ${getAnotherDestination()} ${divider} ${lastDestination}`;
-    case 3:
-      if (firstDestination !== lastDestination) {
-        return `${firstDestination} ${divider} ${getAnotherDestination(3)} ${divider} ${lastDestination}`;
-      }
-      return `${firstDestination} ${divider} ... ${divider} ${lastDestination}`;
-    default:
-      return `${firstDestination} ${divider} ... ${divider} ${lastDestination}`;
-  }
-};

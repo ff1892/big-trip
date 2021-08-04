@@ -1,6 +1,6 @@
-import {getNumeralDate, getLastWordFromString} from "../util.js";
-import {getOffersForEvent} from "../mock/point-offer.js";
-import {DESTINATIONS} from "../mock/point-data.js";
+import {getNumeralDate, getLastWordFromString} from '../util.js';
+import {getOffersForEvent} from '../mock/point-offer.js';
+import {DESTINATIONS} from '../mock/point-data.js';
 
 export const createEditPointTemplate = (point) => {
   const {type, name, dateFrom, dateTo, price, offers, destination, id} = point;
@@ -18,16 +18,16 @@ export const createEditPointTemplate = (point) => {
     let offerTemplate = '';
 
     for (const offer of offersData) {
-    const currentOfferId = getLastWordFromString(offer.title);
-    const check = checkSelectedOfferMap.get(isSelectedOffer(offer));
-    offerTemplate += `<div class="event__offer-selector">
-        <input class="event__offer-checkbox visually-hidden" id="event-offer-${currentOfferId}-${id}" type="checkbox" name="event-offer-${currentOfferId}" ${check}>
-        <label class="event__offer-label" for="event-offer-${currentOfferId}-${id}">
-          <span class="event__offer-title">${offer.title}</span>
-           &plus;&euro;&nbsp;
-          <span class="event__offer-price">${offer.price}</span>
-       </label>
-      </div>`
+      const currentOfferId = getLastWordFromString(offer.title);
+      const check = checkSelectedOfferMap.get(isSelectedOffer(offer));
+      offerTemplate += `<div class="event__offer-selector">
+          <input class="event__offer-checkbox visually-hidden" id="event-offer-${currentOfferId}-${id}" type="checkbox" name="event-offer-${currentOfferId}" ${check}>
+          <label class="event__offer-label" for="event-offer-${currentOfferId}-${id}">
+            <span class="event__offer-title">${offer.title}</span>
+            &plus;&euro;&nbsp;
+            <span class="event__offer-price">${offer.price}</span>
+        </label>
+        </div>`;
     }
 
     return `<section class="event__section  event__section--offers">
@@ -38,35 +38,37 @@ export const createEditPointTemplate = (point) => {
     </section>`;
   };
 
-  const createPhotosTemplate = () => {
-   let photoTemplate = '';
-   for(const picture of pictures) {
-     photoTemplate += `<img class="event__photo" src="${picture.src}" alt="${picture.description}"></img>`;
-   }
+  const renderOffers = () => offersData.length ? createOfferTemplate() : '';
+
+  const createPicturesTemplate = () => {
+    let photoTemplate = '';
+    for(const picture of pictures) {
+      photoTemplate += `<img class="event__photo" src="${picture.src}" alt="${picture.description}"></img>`;
+    }
     return `<div class="event__photos-container">
-    <div class="event__photos-tape">
-      ${photoTemplate}
-    </div>
-  </div>`
+      <div class="event__photos-tape">
+        ${photoTemplate}
+      </div>
+    </div>`;
   };
+
+  const renderPictures = () => pictures.length ? createPicturesTemplate() : '';
 
   const createDestinationTemplate = () => (`<section class="event__section  event__section--destination">
   <h3 class="event__section-title  event__section-title--destination">Destination</h3>
   <p class="event__destination-description">${description}</p>
   ${renderPictures()}
-</section>`);
+  </section>`);
+
+  const renderDestination = () => destination !== '' ? createDestinationTemplate() : '';
 
   const createDestinationListTemplate = (list) => {
     let destinationsList = '';
     for (const destinationItem of list) {
       destinationsList += `<option value="${destinationItem}"></option>`;
     }
-    return `<datalist id="destination-list-${id}">${destinationsList}</datalist>`
-};
-
-const renderOffers = () => offersData.length ? createOfferTemplate() : '';
-const renderPictures = () => pictures.length ? createPhotosTemplate() : '';
-const renderDestination = () => destination !== '' ? createDestinationTemplate() : '';
+    return `<datalist id="destination-list-${id}">${destinationsList}</datalist>`;
+  };
 
   return `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
@@ -170,5 +172,5 @@ const renderDestination = () => destination !== '' ? createDestinationTemplate()
         ${renderDestination()}
       </section>
     </form>
-  </li>`
+  </li>`;
 };

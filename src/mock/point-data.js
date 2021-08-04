@@ -1,11 +1,11 @@
 import dayjs from 'dayjs';
 import {getRandomInteger, getRandomArrayValue, generateOrNot} from '../util.js';
 import {generateDestination} from './point-destination.js';
-import {EVENT_TYPES, getOffersForEvent, getChoosenOffers} from './point-offer.js';
+import {EVENT_TYPES, getChoosenOffers} from './point-offer.js';
 
 const DESTINATIONS = ['Rome', 'Naples', 'Venice', 'Turin', 'Palermo', 'Florenze'];
 const MIN_PRICE = 1;
-const MAX_PRICE = 500;
+const MAX_PRICE = 200;
 const DAYS_GAP = 2;
 const HOURS_GAP = 5;
 const MINUTES_GAP = 50;
@@ -37,10 +37,10 @@ const generateDate = () => {
     [dateMin, dateMax] = [dateMax, dateMin];
   }
 
-    return {
-      min: dateMin,
-      max: dateMax,
-    }
+  return {
+    min: dateMin,
+    max: dateMax,
+  };
 };
 
 
@@ -64,7 +64,7 @@ const generatePoint = (id) => {
 };
 
 const generateData = (pointsCount) => new Array(pointsCount).fill().map((value, index) => generatePoint(index + 1));
-const sortPointsByDate = (points) => points.sort((pointOne, pointTwo) => pointOne.dateFrom - pointTwo.dateFrom);
+const sortPointsByDate = (pointsArray) => pointsArray.sort((pointOne, pointTwo) => pointOne.dateFrom - pointTwo.dateFrom);
 
 const points = generateData(POINTS_COUNT);
 const pointsSortedByDate = sortPointsByDate(points);
@@ -88,4 +88,10 @@ const getPointDefault = () => (
 
 const pointDefault = getPointDefault();
 
-export {DESTINATIONS, pointsSortedByDate, pointDefault, startTime, endTime};
+export {
+  DESTINATIONS,
+  pointsSortedByDate,
+  pointDefault,
+  startTime,
+  endTime
+};

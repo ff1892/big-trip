@@ -41,8 +41,12 @@ const getOffersForEvent = (type) => {
 };
 
 const getChoosenOffers = (type) => {
-  const events = getOffersForEvent(type)
+  const events = getOffersForEvent(type);
   return events.slice(0, getRandomInteger(OFFERS_COUNT_MIN, OFFERS_COUNT_MAX));
-}
+};
 
-export {EVENT_TYPES, getOffersForEvent, getChoosenOffers};
+export {
+  EVENT_TYPES,
+  getOffersForEvent,
+  getChoosenOffers
+};

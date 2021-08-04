@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-const duration = require('dayjs/plugin/duration');
+const duration = require('dayjs/plugin/duration'); // eslint-disable-line
 dayjs.extend(duration);
 
 const MINUTES_IN_HOUR = 60;
@@ -21,7 +21,7 @@ const getShuffledArray = (array) => {
 const getHumanizedDuration = (startDate, endDate) => {
   const eventInMinutes = dayjs(endDate).diff(startDate, 'minutes');
   const eventDuration = dayjs.duration(dayjs(endDate).diff(startDate));
-  let dateFormat = 'mm[M]'
+  let dateFormat = 'mm[M]';
 
   if (eventInMinutes > MINUTES_IN_DAY) {
     dateFormat = 'DD[D] HH[H] mm[M]';
@@ -34,9 +34,13 @@ const getHumanizedDuration = (startDate, endDate) => {
 
 const getNumeralDate = (date) => dayjs(date).format('DD/MM/YY HH:mm');
 const getTimefromDate = (date) => dayjs(date).format('HH:mm');
+const getDayfromDate = (date) => dayjs(date).format('DD');
 const getHumanizedDate = (date) => dayjs(date).format('MMM DD').toUpperCase();
 const getDateAttribute = (date) => dayjs(date).format('YYYY-MM-DD');
 const getDateTimeAttribute = (date) => dayjs(date).format('YYYY-MM-DDTHH:mm');
+
+const isInSameDay = (firstDate, secondDate) => dayjs(firstDate).format('MM YYYY') === dayjs(secondDate).format('DD MM YYYY');
+const isInSameMonth = (firstDate, secondDate) => dayjs(firstDate).format('MM YYYY') === dayjs(secondDate).format('MM YYYY');
 
 const getLastWordFromString = (string)=> string.split(' ').slice(-1);
 
@@ -52,10 +56,13 @@ export {
   getShuffledArray,
   getHumanizedDuration,
   getTimefromDate,
+  getDayfromDate,
   getNumeralDate,
   getHumanizedDate,
   getDateAttribute,
   getDateTimeAttribute,
+  isInSameDay,
+  isInSameMonth,
   getLastWordFromString,
-  generateOrNot,
+  generateOrNot
 };
