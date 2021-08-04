@@ -2,7 +2,7 @@ import {getRandomInteger, getShuffledArray} from '../util.js';
 
 const OFFERS = ['Add luggage', 'Switch to comfort', 'Add meal', 'Choose seats', 'Travel by train', 'VIP service'];
 const OFFERS_COUNT_MIN = 0;
-const OFFERS_COUNT_MAX = 3;
+const OFFERS_COUNT_MAX = 6;
 const MIN_OFFER_PRICE = 1;
 const MAX_OFFER_PRICE = 200;
 const EVENT_TYPES = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];

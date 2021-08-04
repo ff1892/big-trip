@@ -2,15 +2,25 @@ import {getNumeralDate, getLastWordFromString} from "../util.js";
 import {getOffersForEvent} from "../mock/point-offer.js";
 
 export const createEditPointTemplate = (point) => {
-  const {type, name, dateFrom, dateTo, price, offers} = point;
+  const {type, name, dateFrom, dateTo, price, offers, destination} = point;
+  const {description} = destination;
   const offersData = getOffersForEvent(type);
+
+  const checkSelectedOfferMap = new Map([
+    [true, 'checked'],
+    [false, ''],
+  ]);
+
+  const isSelectedOffer = (offer) => offers.includes(offer);
 
   const createOfferTemplate = () => {
     let offerTemplate = '';
+
     for (const offer of offersData) {
     const currentId = getLastWordFromString(offer.title);
+    const check = checkSelectedOfferMap.get(isSelectedOffer(offer));
     offerTemplate += `<div class="event__offer-selector">
-        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${currentId}-1" type="checkbox" name="event-offer-${currentId}">
+        <input class="event__offer-checkbox visually-hidden" id="event-offer-${currentId}-1" type="checkbox" name="event-offer-${currentId}" ${check}>
         <label class="event__offer-label" for="event-offer-${currentId}-1">
           <span class="event__offer-title">${offer.title}</span>
            &plus;&euro;&nbsp;
@@ -136,7 +146,7 @@ export const createEditPointTemplate = (point) => {
         ${renderOffers()}
         <section class="event__section  event__section--destination">
           <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-          <p class="event__destination-description">Chamonix-Mont-Blanc (usually shortened to Chamonix) is a resort area near the junction of France, Switzerland and Italy. At the base of Mont Blanc, the highest summit in the Alps, it's renowned for its skiing.</p>
+          <p class="event__destination-description">${description}</p>
         </section>
       </section>
     </form>
