@@ -5,54 +5,44 @@ import {DESTINATIONS} from '../mock/point-data.js';
 export const createNewPointTemplate = (point) => {
   const {type, name, dateFrom, dateTo, price, offers, destination, id} = point;
   const {description, pictures} = destination;
-  const offersData = getOffersForEvent(type);
-
-  const checkSelectedOfferMap = new Map([
-    [true, 'checked'],
-    [false, ''],
-  ]);
+  const eventOffers = getOffersForEvent(type);
 
   const isSelectedOffer = (offer) => offers.includes(offer);
 
-  const createOfferTemplate = () => {
-    let offerTemplate = '';
+  const createOfferTemplate = (offer) => (`<div class="event__offer-selector">
+    <input class="event__offer-checkbox visually-hidden" id="event-offer-${getLastWordFromString(offer.title)}-${id}" type="checkbox" name="event-offer-${getLastWordFromString(offer.title)}" ${isSelectedOffer(offer) && 'checked'}>
+    <label class="event__offer-label" for="event-offer-${getLastWordFromString(offer.title)}-${id}">
+      <span class="event__offer-title">${offer.title}</span>
+      &plus;&euro;&nbsp;
+      <span class="event__offer-price">${offer.price}</span>
+    </label>
+    </div>`);
 
-    for (const offer of offersData) {
-      const currentOfferId = getLastWordFromString(offer.title);
-      const check = checkSelectedOfferMap.get(isSelectedOffer(offer));
-      offerTemplate += `<div class="event__offer-selector">
-          <input class="event__offer-checkbox visually-hidden" id="event-offer-${currentOfferId}-${id}" type="checkbox" name="event-offer-${currentOfferId}" ${check}>
-          <label class="event__offer-label" for="event-offer-${currentOfferId}-${id}">
-            <span class="event__offer-title">${offer.title}</span>
-            &plus;&euro;&nbsp;
-            <span class="event__offer-price">${offer.price}</span>
-        </label>
-        </div>`;
-    }
-
-    return `<section class="event__section  event__section--offers">
-     <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-      <div class="event__available-offers">
-      ${offerTemplate}
-      </div>
-    </section>`;
+  const createOffersListTemplate = (offersData) => {
+    const offersList = offersData.map((offer) => createOfferTemplate(offer)).join('');
+    return (`<section class="event__section  event__section--offers">
+        <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+        <div class="event__available-offers">
+        ${offersList}
+        </div>
+      </section>`);
   };
 
-  const renderOffers = () => offersData.length ? createOfferTemplate() : '';
+  const renderOffers = () => eventOffers.length ? createOffersListTemplate(eventOffers) : '';
 
-  const createPicturesTemplate = () => {
-    let photoTemplate = '';
-    for(const picture of pictures) {
-      photoTemplate += `<img class="event__photo" src="${picture.src}" alt="${picture.description}"></img>`;
-    }
+  const createPicturesTemplate = (picturesList) => {
+    const picturesTemplate = picturesList.map((picture) => (`<img class="event__photo"
+      src="${picture.src}" alt="${picture.description}"></img>`))
+      .join('');
+
     return `<div class="event__photos-container">
       <div class="event__photos-tape">
-        ${photoTemplate}
+        ${picturesTemplate}
       </div>
     </div>`;
   };
 
-  const renderPictures = () => pictures.length ? createPicturesTemplate() : '';
+  const renderPictures = () => pictures.length ? createPicturesTemplate(pictures) : '';
 
   const createDestinationTemplate = () => (`<section class="event__section  event__section--destination">
   <h3 class="event__section-title  event__section-title--destination">Destination</h3>
@@ -63,11 +53,8 @@ export const createNewPointTemplate = (point) => {
   const renderDestination = () => destination !== '' ? createDestinationTemplate() : '';
 
   const createDestinationListTemplate = (list) => {
-    let destinationsList = '';
-    for (const destinationItem of list) {
-      destinationsList += `<option value="${destinationItem}"></option>`;
-    }
-    return `<datalist id="destination-list-${id}">${destinationsList}</datalist>`;
+    const destinationList = list.map((destinationItem) => `<option value="${destinationItem}"></option>`).join('');
+    return `<datalist id="destination-list-${id}">${destinationList}</datalist>`;
   };
 
   return `<li class="trip-events__item">

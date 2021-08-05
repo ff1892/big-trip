@@ -4,6 +4,7 @@ dayjs.extend(duration);
 
 const MINUTES_IN_HOUR = 60;
 const MINUTES_IN_DAY = MINUTES_IN_HOUR * 24;
+const POINTS_TO_SHOW = 3;
 
 const getRandomInteger = (a = 0, b = 1) => {
   const lower = Math.ceil(Math.min(a, b));
@@ -49,6 +50,41 @@ const generateOrNot = (generatingFunction, generatingFunctionArgument) => {
   return random === 1 ? generatingFunction(generatingFunctionArgument) : '';
 };
 
+const createDestinationsTemplate = (points) => {
+  const firstDestination = points[0].name;
+  const lastDestination = points[points.length - 1].name;
+  const uniquePoints = [...new Set(points.map((point) => point.name))];
+
+  if (uniquePoints.length === 2 && lastDestination === firstDestination) {
+    uniquePoints.push(lastDestination);
+    return uniquePoints.join(' &mdash; ');
+  }
+
+  if (uniquePoints.length <= POINTS_TO_SHOW) {
+    return uniquePoints.join(' &mdash; ');
+  }
+
+  return `${firstDestination} &mdash; ... &mdash; ${lastDestination}`;
+};
+
+const createDurationTemplate = (firstDate, secondDate) => {
+  if (isInSameDay(firstDate, secondDate)) {
+    return `${firstDate}`;
+  }
+  if (isInSameMonth(firstDate, secondDate)) {
+    return `${getHumanizedDate(firstDate)} &mdash; ${getDayfromDate(secondDate)}`;
+  }
+  return `${getHumanizedDate(firstDate)} &mdash; ${getHumanizedDate(secondDate)}`;
+};
+
+const getPointPrice = (point) => {
+  const {offers, price} = point;
+  const offersPrice = offers.reduce((initialPrice, offer) => initialPrice + offer.price, 0);
+  return offersPrice + price;
+};
+
+const getTotalPrice = (points) => points.reduce((initialTotal, point) => initialTotal + getPointPrice(point), 0);
+
 
 export {
   getRandomInteger,
@@ -64,5 +100,8 @@ export {
   isInSameDay,
   isInSameMonth,
   getLastWordFromString,
-  generateOrNot
+  generateOrNot,
+  createDestinationsTemplate,
+  createDurationTemplate,
+  getTotalPrice
 };
