@@ -3,13 +3,13 @@ import {getRandomInteger, getRandomArrayValue, generateOrNot} from '../util.js';
 import {generateDestination} from './point-destination.js';
 import {EVENT_TYPES, getChoosenOffers} from './point-offer.js';
 
-const DESTINATIONS = ['Rome', 'Naples', 'Venice', 'Turin', 'Palermo', 'Florenze'];
+const DESTINATIONS = ['Rome', 'Naples'];
 const MIN_PRICE = 1;
 const MAX_PRICE = 200;
 const DAYS_GAP = 2;
 const HOURS_GAP = 5;
 const MINUTES_GAP = 50;
-const POINTS_COUNT = 10;
+const POINTS_COUNT = 3;
 const EVENT_DAFULT = 'flight';
 
 const getDestinationName = () => getRandomArrayValue(DESTINATIONS);

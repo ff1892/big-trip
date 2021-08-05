@@ -9,6 +9,8 @@ import {createPointTemplate} from './view/point.js';
 import {createNewPointTemplate} from './view/point-new.js';
 import {pointsSortedByDate, pointDefault} from './mock/point-data.js';
 
+import  './view/createDestinationsTemplate.js';
+
 const siteHeader = document.querySelector('.page-header');
 const mainTrip = siteHeader.querySelector('.trip-main');
 const tripControlsMenu = mainTrip.querySelector('.trip-controls__navigation');
