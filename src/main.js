@@ -1,12 +1,13 @@
-import {createRouteTemplate} from './view/route';
-import {createTotalCostTemplate} from './view/total-cost';
-import {createMenuTemplate} from './view/menu';
-import {createFiltersTemplate} from './view/filters';
-import {createSortingTemplate} from './view/sorting';
-import {createEventsListTemplate} from './view/events-list';
-import {createEditPointTemplate} from './view/point-edit';
-import {createPointTemplate} from './view/point';
-import {createNewPointTemplate} from './view/point-new';
+import {createRouteTemplate} from './view/route.js';
+import {createTotalCostTemplate} from './view/total-cost.js';
+import {createMenuTemplate} from './view/menu.js';
+import {createFiltersTemplate} from './view/filters.js';
+import {createSortingTemplate} from './view/sorting.js';
+import {createEventsListTemplate} from './view/events-list.js';
+import {createEditPointTemplate} from './view/point-edit.js';
+import {createPointTemplate} from './view/point.js';
+import {createNewPointTemplate} from './view/point-new.js';
+import {pointsSortedByDate, pointDefault} from './mock/point-data.js';
 
 const siteHeader = document.querySelector('.page-header');
 const mainTrip = siteHeader.querySelector('.trip-main');
@@ -31,9 +32,10 @@ render(tripEventsSection, createSortingTemplate(), 'beforeend');
 render(tripEventsSection, createEventsListTemplate(), 'beforeend');
 
 const tripEventsList = tripEventsSection.querySelector('.trip-events__list');
-render(tripEventsList, createEditPointTemplate(), 'beforeend');
-render(tripEventsList, createPointTemplate(), 'beforeend');
-render(tripEventsList, createPointTemplate(), 'beforeend');
-render(tripEventsList, createNewPointTemplate(), 'beforeend');
+render(tripEventsList, createEditPointTemplate(pointsSortedByDate[0]), 'beforeend');
 
+for (let i = 0; i < pointsSortedByDate.length; i++) {
+  render(tripEventsList, createPointTemplate(pointsSortedByDate[i]), 'beforeend');
+}
 
+render(tripEventsList, createNewPointTemplate(pointDefault), 'beforeend');
