@@ -1,5 +1,6 @@
-import {createElement} from '../common/utils-render';
-import {getNumeralDate, getLastWordFromString} from '../util.js';
+import {createElement} from '../common/util-render.js';
+import {getNumeralDate} from '../common/util-time.js';
+import {getLastWordFromString} from '../common/util-components.js';
 import {getOffersForEvent} from '../mock/point-offer.js';
 import {DESTINATIONS, pointDefault} from '../mock/point-data.js';
 

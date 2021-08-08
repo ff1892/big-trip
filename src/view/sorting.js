@@ -1,4 +1,4 @@
-import {createElement} from '../common/utils-render';
+import {createElement} from '../common/util-render.js';
 
 const createSortingTemplate = () => (
   `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">

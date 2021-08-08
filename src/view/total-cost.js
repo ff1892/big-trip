@@ -1,6 +1,6 @@
-import {createElement} from '../common/utils-render';
+import {getTotalPrice} from '../common/util-components.js';
+import {createElement} from '../common/util-render.js';
 import {pointsByDate} from '../mock/point-data.js';
-import {getTotalPrice} from '../util.js';
 
 const createTotalCostTemplate = () => (
   `<p class="trip-info__cost">

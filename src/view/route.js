@@ -1,5 +1,6 @@
-import {createElement} from '../common/utils-render';
-import {createDestinationsTemplate, createDurationTemplate} from '../util';
+import {createElement} from '../common/util-render.js';
+import {createDestinationsTemplate} from '../common/util-components.js';
+import {createDurationTemplate} from '../common/util-time.js';
 import {pointsByDate, startTime, endTime} from '../mock/point-data';
 
 export const createRouteTemplate = () => (

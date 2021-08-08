@@ -1,4 +1,4 @@
-import {render, RenderPosition} from './common/utils-render.js';
+import {render, RenderPosition} from './common/util-render.js';
 import {pointsByDate} from './mock/point-data.js';
 
 import TripInfoView from './view/trip-info.js';

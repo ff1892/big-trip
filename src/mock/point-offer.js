@@ -1,4 +1,4 @@
-import {getRandomInteger, getShuffledArray} from '../util.js';
+import {getRandomInteger, getShuffledArray} from '../common/util-random.js';
 
 const OFFERS = ['Add luggage', 'Switch to comfort', 'Add meal', 'Choose seats', 'Travel by train', 'VIP service'];
 const OFFERS_COUNT_MIN = 0;

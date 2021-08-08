@@ -1,4 +1,4 @@
-import {createElement} from '../common/utils-render';
+import {createElement} from '../common/util-render.js';
 
 const createMenuTemplate = () => (
   `<nav class="trip-controls__trip-tabs  trip-tabs">

@@ -1,4 +1,4 @@
-import {createElement} from '../common/utils-render';
+import {createElement} from '../common/util-render.js';
 
 const createTripInfoTemplate = () => '<section class="trip-main__trip-info trip-info"></section>';
 

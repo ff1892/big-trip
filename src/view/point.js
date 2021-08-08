@@ -1,5 +1,5 @@
-import {createElement} from '../common/utils-render.js';
-import {getHumanizedDuration, getTimefromDate, getDateAttribute, getDateTimeAttribute, getHumanizedDate} from '../util.js';
+import {createElement} from '../common/util-render.js';
+import {getHumanizedDuration, getTimefromDate, getDateAttribute, getDateTimeAttribute, getHumanizedDate} from '../common/util-time.js';
 
 const createPointTemplate = (point) => {
   const {type, name, isFavorite, dateFrom, dateTo, price, offers} = point;
