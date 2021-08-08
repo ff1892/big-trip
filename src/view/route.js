@@ -1,11 +1,31 @@
+import {createElement} from '../common/utils-render';
 import {createDestinationsTemplate, createDurationTemplate} from '../util';
-import {pointsSortedByDate, startTime, endTime} from '../mock/point-data';
+import {pointsByDate, startTime, endTime} from '../mock/point-data';
 
 export const createRouteTemplate = () => (
-  `<section class="trip-main__trip-info  trip-info">
-    <div class="trip-info__main">
-      <h1 class="trip-info__title">${createDestinationsTemplate(pointsSortedByDate)}</h1>
+  `<div class="trip-info__main">
+      <h1 class="trip-info__title">${createDestinationsTemplate(pointsByDate)}</h1>
       <p class="trip-info__dates">${createDurationTemplate(startTime, endTime)}</p>
-    </div>
-  </section>`
+    </div>`
 );
+
+export default class Route {
+  constructor() {
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createRouteTemplate();
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

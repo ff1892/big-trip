@@ -10,7 +10,7 @@ const DAYS_GAP = 2;
 const HOURS_GAP = 5;
 const MINUTES_GAP = 50;
 const POINTS_COUNT = 10;
-const EVENT_DAFULT = 'flight';
+const EVENT_DEFAULT = 'flight';
 
 const getDestinationName = () => getRandomArrayValue(DESTINATIONS);
 const getEventType = () => getRandomArrayValue(EVENT_TYPES);
@@ -67,19 +67,19 @@ const generateData = (pointsCount) => new Array(pointsCount).fill().map((value, 
 const sortPointsByDate = (pointsArray) => pointsArray.sort((pointOne, pointTwo) => pointOne.dateFrom - pointTwo.dateFrom);
 
 const points = generateData(POINTS_COUNT);
-const pointsSortedByDate = sortPointsByDate(points);
+const pointsByDate = sortPointsByDate(points);
 
-const startTime = pointsSortedByDate[0].dateFrom;
-const endTime = pointsSortedByDate[pointsSortedByDate.length - 1].dateTo;
+const startTime = pointsByDate[0].dateFrom;
+const endTime = pointsByDate[pointsByDate.length - 1].dateTo;
 
 const getPointDefault = () => (
   {
     id: points.length + 1,
-    type: EVENT_DAFULT,
+    type: EVENT_DEFAULT,
     name: '',
     price: '',
-    dateFrom: dayjs(endTime).add(HOURS_GAP, 'hours').toDate(),
-    dateTo: dayjs(endTime).add(HOURS_GAP + 1, 'hours').toDate(),
+    dateFrom: dayjs(endTime).add(HOURS_GAP, 'hours').toDate() || dayjs().toDate,
+    dateTo: dayjs(endTime).add(HOURS_GAP + 1, 'hours').toDate() || dayjs().add(HOURS_GAP, 'hours').toDate(),
     isFavorite: false,
     offers: '',
     destination: '',
@@ -90,8 +90,8 @@ const pointDefault = getPointDefault();
 
 export {
   DESTINATIONS,
-  pointsSortedByDate,
-  pointDefault,
+  pointsByDate,
   startTime,
-  endTime
+  endTime,
+  pointDefault
 };
