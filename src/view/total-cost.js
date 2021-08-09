@@ -1,5 +1,5 @@
-import {getTotalPrice} from '../common/util-components.js';
-import {createElement} from '../common/util-render.js';
+import {getTotalPrice} from '../utils/util-components.js';
+import {createElement} from '../utils/util-render.js';
 import {pointsByDate} from '../mock/point-data.js';
 
 const createTotalCostTemplate = () => (

@@ -1,4 +1,4 @@
-import {render, RenderPosition} from './common/util-render.js';
+import {render, RenderPosition} from './utils/util-render.js';
 import {pointsByDate} from './mock/point-data.js';
 
 import TripInfoView from './view/trip-info.js';
@@ -55,6 +55,6 @@ render(tripControlsFilters, new FilterView().getElement(), RenderPosition.BEFORE
 render(tripEventsSection, new SortingView().getElement(), RenderPosition.BEFOREEND);
 render(tripEventsSection, listComponent.getElement(), RenderPosition.BEFOREEND);
 
-pointsByDate.map((point) => {
-  renderPoint(listComponent.getElement(), point);
-});
+for (let i = 0; i < pointsByDate.length; i++) {
+  renderPoint(listComponent.getElement(), pointsByDate[i]);
+}
