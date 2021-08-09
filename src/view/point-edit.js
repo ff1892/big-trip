@@ -1,8 +1,10 @@
-import {getNumeralDate, getLastWordFromString} from '../util.js';
+import {createElement} from '../common/util-render.js';
+import {getNumeralDate} from '../common/util-time.js';
+import {getLastWordFromString} from '../common/util-components.js';
 import {getOffersForEvent} from '../mock/point-offer.js';
-import {DESTINATIONS} from '../mock/point-data.js';
+import {DESTINATIONS, pointDefault} from '../mock/point-data.js';
 
-export const createEditPointTemplate = (point) => {
+const createPointEditTemplate = (point) => {
   const {type, name, dateFrom, dateTo, price, offers, destination, id} = point;
   const {description, pictures} = destination;
   const eventOffers = getOffersForEvent(type);
@@ -10,7 +12,7 @@ export const createEditPointTemplate = (point) => {
   const isSelectedOffer = (offer) => offers.includes(offer);
 
   const createOfferTemplate = (offer) => (`<div class="event__offer-selector">
-    <input class="event__offer-checkbox visually-hidden" id="event-offer-${getLastWordFromString(offer.title)}-${id}" type="checkbox" name="event-offer-${getLastWordFromString(offer.title)}" ${isSelectedOffer(offer) && 'checked'}>
+    <input class="event__offer-checkbox visually-hidden" id="event-offer-${getLastWordFromString(offer.title)}-${id}" type="checkbox" name="event-offer-${getLastWordFromString(offer.title)}" ${isSelectedOffer(offer) ? 'checked' : ''}>
     <label class="event__offer-label" for="event-offer-${getLastWordFromString(offer.title)}-${id}">
       <span class="event__offer-title">${offer.title}</span>
       &plus;&euro;&nbsp;
@@ -161,3 +163,25 @@ export const createEditPointTemplate = (point) => {
     </form>
   </li>`;
 };
+
+export default class PointEdit {
+  constructor(point = pointDefault) {
+    this._element = null;
+    this._point = point;
+  }
+
+  getTemplate() {
+    return createPointEditTemplate(this._point);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

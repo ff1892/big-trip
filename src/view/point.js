@@ -1,6 +1,7 @@
-import {getHumanizedDuration, getTimefromDate, getDateAttribute, getDateTimeAttribute, getHumanizedDate} from '../util.js';
+import {createElement} from '../common/util-render.js';
+import {getHumanizedDuration, getTimefromDate, getDateAttribute, getDateTimeAttribute, getHumanizedDate} from '../common/util-time.js';
 
-export const createPointTemplate = (point) => {
+const createPointTemplate = (point) => {
   const {type, name, isFavorite, dateFrom, dateTo, price, offers} = point;
 
   const createSelectedOffersTemplate = () => {
@@ -42,7 +43,7 @@ export const createPointTemplate = (point) => {
         &euro;&nbsp;<span class="event__price-value">${price}</span>
       </p>
       ${renderSelectedOffers()}
-      <button class="event__favorite-btn ${isFavorite && 'event__favorite-btn--active'}" type="button">
+      <button class="event__favorite-btn ${isFavorite ? 'event__favorite-btn--active': ''}" type="button">
         <span class="visually-hidden">Add to favorite</span>
         <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
           <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
@@ -54,3 +55,26 @@ export const createPointTemplate = (point) => {
     </div>
   </li>`;
 };
+
+
+export default class Point {
+  constructor(point) {
+    this._element = null;
+    this._point = point;
+  }
+
+  getTemplate() {
+    return createPointTemplate(this._point);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
