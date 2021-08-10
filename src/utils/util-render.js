@@ -1,4 +1,4 @@
-import AbstractComponent from "../view/abstract-component";
+import AbstractComponent from '../view/abstract-component';
 
 export const RenderPosition = {
   AFTERBEGIN: 'afterbegin',
@@ -46,7 +46,7 @@ export const replace = (newChild, oldChild) => {
   }
 
   parent.replaceChild(newChild, oldChild);
-}
+};
 
 export const remove = (component) => {
   if (!(component instanceof AbstractComponent)) {

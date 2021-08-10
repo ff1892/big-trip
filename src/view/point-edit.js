@@ -168,9 +168,32 @@ export default class PointEdit extends AbstractComponentView {
   constructor(point = pointDefault) {
     super();
     this._point = point;
+
+    this._editClickHandler = this._editClickHandler.bind(this);
+    this._submitHandler = this._submitHandler.bind(this);
   }
 
   getTemplate() {
     return createPointEditTemplate(this._point);
+  }
+
+  _editClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.editClick();
+  }
+
+  setEditClickHandler(callback) {
+    this._callback.editClick = callback;
+    this.getElement().querySelector('.event--edit').addEventListener('click', this._editClickHandler);
+  }
+
+  _submitHandler(evt) {
+    evt.preventDefault();
+    this._callback.submit();
+  }
+
+  setSubmitHandler(callback) {
+    this._callback.submit = callback;
+    this.getElement().querySelector('.event--edit').addEventListener('submit', this._submitHandler);
   }
 }

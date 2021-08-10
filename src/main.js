@@ -1,4 +1,4 @@
-import {render, RenderPosition} from './utils/util-render.js';
+import {render, RenderPosition, replace} from './utils/util-render.js';
 import {MessagesPointsAbsent} from './utils/util-components.js';
 import {pointsByDate} from './mock/point-data.js';
 
@@ -12,7 +12,6 @@ import ListView from './view/list.js';
 import PointView from './view/point.js';
 import PointEditView from './view/point-edit.js';
 import PointsAbsentView from './view/points-absent.js';
-
 
 const siteHeader = document.querySelector('.page-header');
 const mainTrip = siteHeader.querySelector('.trip-main');
@@ -29,11 +28,11 @@ const renderPoint = (list, point) => {
   const pointEditComponent = new PointEditView(point);
 
   const replacePointToForm = () => {
-    list.replaceChild(pointEditComponent.getElement(), pointComponent.getElement());
+    replace(pointEditComponent, pointComponent);
   };
 
   const replaceFormToPoint = () => {
-    list.replaceChild(pointComponent.getElement(), pointEditComponent.getElement());
+    replace(pointComponent, pointEditComponent);
   };
 
   const onEscapeKeyDown = (evt) => {
@@ -44,23 +43,22 @@ const renderPoint = (list, point) => {
     }
   };
 
-  pointComponent.getElement().querySelector('.event__rollup-btn').addEventListener('click', () => {
+  pointComponent.setEditClickHandler(() => {
     replacePointToForm();
     document.addEventListener('keydown', onEscapeKeyDown);
   });
 
-  pointEditComponent.getElement().querySelector('.event--edit').addEventListener('submit', (evt) => {
-    evt.preventDefault();
+  pointEditComponent.setEditClickHandler(() => {
     replaceFormToPoint();
     document.removeEventListener('keydown', onEscapeKeyDown);
   });
 
-  pointEditComponent.getElement().querySelector('.event__rollup-btn').addEventListener('click', () => {
+  pointEditComponent.setSubmitHandler(() => {
     replaceFormToPoint();
     document.removeEventListener('keydown', onEscapeKeyDown);
   });
 
-  render(list, pointComponent.getElement(), RenderPosition.BEFOREEND);
+  render(list, pointComponent, RenderPosition.BEFOREEND);
 };
 
 const renderDataPage = (data) => {
@@ -71,11 +69,11 @@ const renderDataPage = (data) => {
   render(tripEventsSection, listComponent, RenderPosition.BEFOREEND);
 
   for (let i = 0; i < data.length; i++) {
-    renderPoint(listComponent.getElement(), data[i]);
+    renderPoint(listComponent, data[i]);
   }
 };
 
-const renderPage = (data) => {
+const renderPage = (data = []) => {
 
   render(tripControlsMenu, new MenuView(), RenderPosition.BEFOREEND);
   render(tripControlsFilters, new FilterView(), RenderPosition.BEFOREEND);
@@ -86,7 +84,7 @@ const renderPage = (data) => {
   }
 
   const pointsAbsentEverything = new PointsAbsentView(MessagesPointsAbsent.EVERYTHING);
-  render(tripEventsSection, pointsAbsentEverything.getElement(), RenderPosition.BEFOREEND);
+  render(tripEventsSection, pointsAbsentEverything, RenderPosition.BEFOREEND);
 };
 
 renderPage(pointsByDate);
