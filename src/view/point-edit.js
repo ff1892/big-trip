@@ -1,4 +1,4 @@
-import {createElement} from '../utils/util-render.js';
+import AbstractComponentView from './abstract-component.js';
 import {getNumeralDate} from '../utils/util-time.js';
 import {getLastWordFromString} from '../utils/util-components.js';
 import {getOffersForEvent} from '../mock/point-offer.js';
@@ -164,24 +164,13 @@ const createPointEditTemplate = (point) => {
   </li>`;
 };
 
-export default class PointEdit {
+export default class PointEdit extends AbstractComponentView {
   constructor(point = pointDefault) {
-    this._element = null;
+    super();
     this._point = point;
   }
 
   getTemplate() {
     return createPointEditTemplate(this._point);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
