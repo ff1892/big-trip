@@ -1,19 +1,17 @@
 import {createElement} from '../utils/util-render.js';
 
-const createMenuTemplate = () => (
-  `<nav class="trip-controls__trip-tabs  trip-tabs">
-    <a class="trip-tabs__btn  trip-tabs__btn--active" href="#">Table</a>
-    <a class="trip-tabs__btn" href="#">Stats</a>
-  </nav>`
+const createPointsEmptyTemplate = (message) => (
+  `<p class="trip-events__msg">${message}</p>`
 );
 
-export default class Menu {
-  constructor() {
+export default class PointsAbsent {
+  constructor(message) {
     this._element = null;
+    this._message = message;
   }
 
   getTemplate() {
-    return createMenuTemplate();
+    return createPointsEmptyTemplate(this._message);
   }
 
   getElement() {
