@@ -1,4 +1,4 @@
-import {createElement} from '../utils/util-render.js';
+import AbstractComponentView from './abstract-component.js';
 
 const createFiltersTemplate = () => (
   `<form class="trip-filters" action="#" method="get">
@@ -18,23 +18,8 @@ const createFiltersTemplate = () => (
   </form>`
 );
 
-export default class Filter {
-  constructor() {
-    this._element = null;
-  }
-
+export default class Filter extends AbstractComponentView {
   getTemplate() {
     return createFiltersTemplate();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  romoveElement() {
-    this._element = null;
   }
 }

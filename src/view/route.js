@@ -1,4 +1,4 @@
-import {createElement} from '../utils/util-render.js';
+import AbstractComponentView from './abstract-component.js';
 import {createDestinationsTemplate} from '../utils/util-components.js';
 import {createDurationTemplate} from '../utils/util-time.js';
 import {pointsByDate, startTime, endTime} from '../mock/point-data';
@@ -10,23 +10,8 @@ export const createRouteTemplate = () => (
     </div>`
 );
 
-export default class Route {
-  constructor() {
-    this._element = null;
-  }
-
+export default class Route extends AbstractComponentView {
   getTemplate() {
     return createRouteTemplate();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

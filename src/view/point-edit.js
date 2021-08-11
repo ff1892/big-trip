@@ -1,4 +1,4 @@
-import {createElement} from '../utils/util-render.js';
+import AbstractComponentView from './abstract-component.js';
 import {getNumeralDate} from '../utils/util-time.js';
 import {getLastWordFromString} from '../utils/util-components.js';
 import {getOffersForEvent} from '../mock/point-offer.js';
@@ -164,24 +164,36 @@ const createPointEditTemplate = (point) => {
   </li>`;
 };
 
-export default class PointEdit {
+export default class PointEdit extends AbstractComponentView {
   constructor(point = pointDefault) {
-    this._element = null;
+    super();
     this._point = point;
+
+    this._editClickHandler = this._editClickHandler.bind(this);
+    this._submitHandler = this._submitHandler.bind(this);
   }
 
   getTemplate() {
     return createPointEditTemplate(this._point);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
+  _editClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.editClick();
   }
 
-  removeElement() {
-    this._element = null;
+  setEditClickHandler(callback) {
+    this._callback.editClick = callback;
+    this.getElement().querySelector('.event--edit').addEventListener('click', this._editClickHandler);
+  }
+
+  _submitHandler(evt) {
+    evt.preventDefault();
+    this._callback.submit();
+  }
+
+  setSubmitHandler(callback) {
+    this._callback.submit = callback;
+    this.getElement().querySelector('.event--edit').addEventListener('submit', this._submitHandler);
   }
 }
