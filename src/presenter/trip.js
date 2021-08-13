@@ -8,8 +8,8 @@ import MenuView from '../view/menu.js';
 import FilterView from '../view/filters.js';
 import SortingView from '../view/sorting.js';
 import ListView from '../view/list.js';
-import PointView from '../view/point.js';
-import PointEditView from '../view/point-edit.js';
+// import PointView from '../view/point.js';
+// import PointEditView from '../view/point-edit.js';
 import PointsAbsentView from '../view/points-absent.js';
 
 export default class Trip {
@@ -21,7 +21,7 @@ export default class Trip {
     this._tripEventsSection = page.querySelector('.trip-events');
 
     this._tripInfoComponent = new TripInfoView();
-    this._listComponent = new ListView();
+    this._listContainer = new ListView();
     this._pointsAbsentEverything = new PointsAbsentView(MessagesPointsAbsent.EVERYTHING);
   }
 
@@ -51,7 +51,7 @@ export default class Trip {
     render(this._tripEventsSection, new SortingView(), RenderPosition.BEFOREEND);
   }
 
-  _renderPoint(list, point) {
+  _renderPoint(point) {
     const pointComponent = new PointView(point);
     const pointEditComponent = new PointEditView(point);
 
@@ -86,24 +86,22 @@ export default class Trip {
       document.removeEventListener('keydown', onEscapeKeyDown);
     });
 
-    render(list, pointComponent, RenderPosition.BEFOREEND);
+    render(this._listContainer, pointComponent, RenderPosition.BEFOREEND);
     }
 
 
   _renderPoints() {
-    render(this._tripEventsSection, this._listComponent, RenderPosition.BEFOREEND);
-    for (let i = 0; i < this._points.length; i++) {
-      this._renderPoint(this._listComponent, this._points[i]);
-    }
+    render(this._tripEventsSection, this._listContainer, RenderPosition.BEFOREEND);
+    this._points.forEach((point) => this._renderPoint(point));
   }
 
-  _renderPointsAbsent() {
+  _renderPointsAbsentEvery() {
     render(this._tripEventsSection, this._pointsAbsentEverything, RenderPosition.BEFOREEND);
   }
 
   _renderInfo() {
-    if (this._points.length === 0) {
-      this._renderPointsAbsent();
+    if (!this._points.length) {
+      this._renderPointsAbsentEvery();
       return;
     }
 
