@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import {getRandomInteger, getRandomArrayValue, generateOrNot} from '../utils/util-random.js';
+import {getRandomInteger, getRandomArrayValue, generateOrNot} from '../utils/util-common.js';
 import {generateDestination} from './point-destination.js';
 import {EVENT_TYPES, getChoosenOffers} from './point-offer.js';
 

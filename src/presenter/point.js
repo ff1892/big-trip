@@ -1,33 +1,58 @@
-import {render, RenderPosition, replace} from '../utils/util-render.js';
+import {remove, render, RenderPosition, replace} from '../utils/util-render.js';
 
 import PointView from '../view/point.js';
 import PointEditView from '../view/point-edit.js';
 
 export default class Point {
-  constructor(listContainer) {
-    this._listContainer = listContainer;
+  constructor(listComponent, changeData) {
+    this._listComponent = listComponent;
+    this._changeData = changeData;
 
     this._pointComponent = null;
     this._pointEditComponent = null;
 
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
+    this._handlePointEditClick = this._handlePointEditClick.bind(this);
+    this._handleFormEditClick = this._handleFormEditClick.bind(this);
+    this._handleFormSubmit = this._handleFormSubmit.bind(this);
+    this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
   }
 
   init(point) {
     this._point = point;
 
+    const prevPointComponent = this._pointComponent;
+    const prevPointEditComponent = this._pointEditComponent;
+
     this._pointComponent = new PointView(point);
     this._pointEditComponent = new PointEditView(point);
 
-    render(this._listContainer, this._pointComponent, RenderPosition.BEFOREEND);
+    this._pointComponent.setEditClickHandler(this._handlePointEditClick);
+    this._pointComponent.setFavoriteClickHandler(this._handleFavoriteClick);
+    this._pointEditComponent.setEditClickHandler(this._handleFormEditClick);
+    this._pointEditComponent.setSubmitHandler(this._handleFormSubmit);
+
+    if (prevPointComponent === null || prevPointEditComponent === null) {
+      render(this._listComponent, this._pointComponent, RenderPosition.BEFOREEND);
+      return;
+    }
+
+    if (this._listComponent.getElement().contains(prevPointComponent.getElement())) {
+      replace(this._pointComponent, prevPointComponent);
+    }
+
+    if (this._listComponent.getElement().contains(prevPointEditComponent.getElement())) {
+      replace(this._pointEditComponent, prevPointEditComponent);
+    }
+
+    remove(prevPointComponent);
+    remove(prevPointEditComponent);
   }
 
-  _escKeyDownHandler = (evt) => {
-    if (evt.key === 'Escape' || evt.key === 'Esc') {
-      evt.preventDefault();
-      this._replaceFormToPoint();
-    }
-  };
+  destroy() {
+    remove(this._pointComponent);
+    remove(this._pointEditComponent);
+  }
 
   _replacePointToForm() {
     replace(this._pointEditComponent, this._pointComponent);
@@ -39,6 +64,34 @@ export default class Point {
     document.removeEventListener('keydown', this._escKeyDownHandler);
   }
 
+  _escKeyDownHandler(evt) {
+    if (evt.key === 'Escape' || evt.key === 'Esc') {
+      evt.preventDefault();
+      this._replaceFormToPoint();
+    }
+  };
 
+  _handlePointEditClick() {
+    this._replacePointToForm();
+  }
 
+  _handleFormEditClick() {
+    this._replaceFormToPoint();
+  }
+
+  _handleFormSubmit() {
+    this._replaceFormToPoint();
+  }
+
+  _handleFavoriteClick() {
+    this._changeData(
+      Object.assign(
+        {},
+        this._point,
+        {
+          isFavorite: !this._point.isFavorite,
+        },
+      )
+    );
+  }
 }

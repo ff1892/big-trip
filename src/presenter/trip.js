@@ -1,4 +1,5 @@
-import {render, RenderPosition, replace} from '../utils/util-render.js';
+import {remove, render, RenderPosition} from '../utils/util-render.js';
+import {updateItem} from '../utils/util-common.js';
 import {MessagesPointsAbsent} from '../utils/util-components.js';
 
 import TripInfoView from '../view/trip-info.js';
@@ -8,9 +9,9 @@ import MenuView from '../view/menu.js';
 import FilterView from '../view/filters.js';
 import SortingView from '../view/sorting.js';
 import ListView from '../view/list.js';
-// import PointView from '../view/point.js';
-// import PointEditView from '../view/point-edit.js';
 import PointsAbsentView from '../view/points-absent.js';
+
+import PointPresenter from './point.js';
 
 export default class Trip {
   constructor(page) {
@@ -21,8 +22,12 @@ export default class Trip {
     this._tripEventsSection = page.querySelector('.trip-events');
 
     this._tripInfoComponent = new TripInfoView();
-    this._listContainer = new ListView();
+    this._listComponent = new ListView();
     this._pointsAbsentEverything = new PointsAbsentView(MessagesPointsAbsent.EVERYTHING);
+
+    this._handlePointChange = this._handlePointChange.bind(this);
+
+    this._pointPresenter = new Map();
   }
 
   init(points) {
@@ -31,6 +36,11 @@ export default class Trip {
     render(this._tripMenu, new MenuView(), RenderPosition.BEFOREEND);
     render(this._tripFilters, new FilterView(), RenderPosition.BEFOREEND);
     this._renderInfo();
+  }
+
+  _handlePointChange(updatedPoint) {
+    this._points = updateItem(this._points, updatedPoint);
+    this._pointPresenter.get(updatedPoint.id).init(updatedPoint);
   }
 
   _renderRoute() {
@@ -52,47 +62,21 @@ export default class Trip {
   }
 
   _renderPoint(point) {
-    const pointComponent = new PointView(point);
-    const pointEditComponent = new PointEditView(point);
-
-    const replacePointToForm = () => {
-    replace(pointEditComponent, pointComponent);
-    };
-
-    const replaceFormToPoint = () => {
-    replace(pointComponent, pointEditComponent);
-    };
-
-    const onEscapeKeyDown = (evt) => {
-    if (evt.key === 'Escape' || evt.key === 'Esc') {
-      evt.preventDefault();
-      replaceFormToPoint();
-      document.removeEventListener('keydown', onEscapeKeyDown);
-    }
-    };
-
-    pointComponent.setEditClickHandler(() => {
-      replacePointToForm();
-      document.addEventListener('keydown', onEscapeKeyDown);
-    });
-
-    pointEditComponent.setEditClickHandler(() => {
-      replaceFormToPoint();
-      document.removeEventListener('keydown', onEscapeKeyDown);
-    });
-
-    pointEditComponent.setSubmitHandler(() => {
-      replaceFormToPoint();
-      document.removeEventListener('keydown', onEscapeKeyDown);
-    });
-
-    render(this._listContainer, pointComponent, RenderPosition.BEFOREEND);
+    const pointPresenter = new PointPresenter(this._listComponent, this._handlePointChange);
+    pointPresenter.init(point);
+    this._pointPresenter.set(point.id, pointPresenter);
     }
 
 
   _renderPoints() {
-    render(this._tripEventsSection, this._listContainer, RenderPosition.BEFOREEND);
+    render(this._tripEventsSection, this._listComponent, RenderPosition.BEFOREEND);
     this._points.forEach((point) => this._renderPoint(point));
+  }
+
+  _clearPoints() {
+    this._pointPresenter.forEach((presenter) => presenter.destroy());
+    this._pointPresenter.clear();
+    remove(this._listComponent);
   }
 
   _renderPointsAbsentEvery() {
