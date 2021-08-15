@@ -1,6 +1,8 @@
-import {remove, render, RenderPosition} from '../utils/util-render.js';
-import {updateItem} from '../utils/util-common.js';
-import {MessagesPointsAbsent} from '../utils/util-components.js';
+import {remove, render, RenderPosition} from '../utils/render.js';
+import {updateItem} from '../utils/common.js';
+import {MessagesPointsAbsent} from '../utils/components.js';
+import {sortPointsByTimeDown, sortPointsByPriceDown} from '../utils/sort-filter.js';
+import {SortingType} from '../const.js';
 
 import TripInfoView from '../view/trip-info.js';
 import TotalCostView from '../view/total-cost.js';
@@ -22,9 +24,11 @@ export default class Trip {
     this._tripEventsSection = page.querySelector('.trip-events');
 
     this._tripInfoComponent = new TripInfoView();
+    this._sortingComponent = new SortingView();
     this._listComponent = new ListView();
     this._pointsAbsentEverything = new PointsAbsentView(MessagesPointsAbsent.EVERYTHING);
 
+    this._handleSortingTypeChange = this._handleSortingTypeChange.bind(this);
     this._handlePointChange = this._handlePointChange.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
 
@@ -33,14 +37,35 @@ export default class Trip {
 
   init(points) {
     this._points = points.slice();
+    this._sourcedPoints = points.slice();
 
     render(this._tripMenu, new MenuView(), RenderPosition.BEFOREEND);
     render(this._tripFilters, new FilterView(), RenderPosition.BEFOREEND);
     this._renderInfo();
   }
 
+  _sortPoints(sortingType) {
+    switch(sortingType){
+      case SortingType.TIME:
+        this._points.sort(sortPointsByTimeDown);
+        break;
+      case SortingType.PRICE:
+        this._points.sort(sortPointsByPriceDown);
+        break;
+      default:
+        this._points = this._sourcedPoints.slice();
+    }
+  }
+
+  _handleSortingTypeChange(sortingType) {
+    this._sortPoints(sortingType);
+    this._clearPoints();
+    this._renderPoints();
+  }
+
   _handlePointChange(updatedPoint) {
     this._points = updateItem(this._points, updatedPoint);
+    this._sourcedPoints = updateItem(this._sourcedPoints, updatedPoint);
     this._pointPresenter.get(updatedPoint.id).init(updatedPoint);
   }
 
@@ -63,7 +88,9 @@ export default class Trip {
   }
 
   _renderSorting() {
-    render(this._tripEventsSection, new SortingView(), RenderPosition.BEFOREEND);
+    render(this._tripEventsSection, this._sortingComponent, RenderPosition.BEFOREEND);
+    this._sortingComponent.setSortingTypeChangeHandler(this._handleSortingTypeChange);
+
   }
 
   _renderPoint(point) {

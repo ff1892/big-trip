@@ -1,5 +1,5 @@
 import AbstractComponentView from './abstract-component.js';
-import {getTotalPrice} from '../utils/util-components.js';
+import {getTotalPrice} from '../utils/components.js';
 import {pointsByDate} from '../mock/point-data.js';
 
 const createTotalCostTemplate = () => (

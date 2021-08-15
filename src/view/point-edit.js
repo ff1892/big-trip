@@ -1,6 +1,6 @@
 import AbstractComponentView from './abstract-component.js';
-import {getNumeralDate} from '../utils/util-time.js';
-import {getLastWordFromString} from '../utils/util-components.js';
+import {getNumeralDate} from '../utils/time.js';
+import {getLastWordFromString} from '../utils/components.js';
 import {getOffersForEvent} from '../mock/point-offer.js';
 import {DESTINATIONS, pointDefault} from '../mock/point-data.js';
 

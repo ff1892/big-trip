@@ -1,6 +1,6 @@
 import AbstractComponentView from './abstract-component.js';
-import {createDestinationsTemplate} from '../utils/util-components.js';
-import {createDurationTemplate} from '../utils/util-time.js';
+import {createDestinationsTemplate} from '../utils/components.js';
+import {createDurationTemplate} from '../utils/time.js';
 import {pointsByDate, startTime, endTime} from '../mock/point-data';
 
 export const createRouteTemplate = () => (

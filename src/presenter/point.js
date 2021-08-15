@@ -1,4 +1,4 @@
-import {remove, render, RenderPosition, replace} from '../utils/util-render.js';
+import {remove, render, RenderPosition, replace} from '../utils/render.js';
 
 import PointView from '../view/point.js';
 import PointEditView from '../view/point-edit.js';
