@@ -69,7 +69,6 @@ const generateData = (pointsCount) => new Array(pointsCount).fill().map((value, 
 const points = generateData(POINTS_COUNT);
 const pointsByDate = points.sort(sortPointsByDayUp);
 
-const startTime = pointsByDate[0].dateFrom;
 const endTime = pointsByDate[pointsByDate.length - 1].dateTo;
 
 const getPointDefault = () => (
@@ -91,7 +90,5 @@ const pointDefault = getPointDefault();
 export {
   DESTINATIONS,
   pointsByDate,
-  startTime,
-  endTime,
   pointDefault
 };
