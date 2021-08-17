@@ -29,7 +29,10 @@ export const getDateTimeAttribute = (date) => dayjs(date).format('YYYY-MM-DDTHH:
 export const isInSameDay = (firstDate, secondDate) => dayjs(firstDate).format('MM YYYY') === dayjs(secondDate).format('DD MM YYYY');
 export const isInSameMonth = (firstDate, secondDate) => dayjs(firstDate).format('MM YYYY') === dayjs(secondDate).format('MM YYYY');
 
-export const createDurationTemplate = (firstDate, secondDate) => {
+export const createDurationTemplate = (points) => {
+  const firstDate = points[0].dateFrom;
+  const secondDate = points[points.length - 1].dateTo;
+
   if (isInSameDay(firstDate, secondDate)) {
     return `${firstDate}`;
   }

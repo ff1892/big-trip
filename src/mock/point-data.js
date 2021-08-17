@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
-import {getRandomInteger, getRandomArrayValue, generateOrNot} from '../utils/util-random.js';
+import {getRandomInteger, getRandomArrayValue, generateOrNot} from '../utils/common.js';
+import {sortPointsByDayUp} from '../utils/sort-filter.js';
 import {generateDestination} from './point-destination.js';
 import {EVENT_TYPES, getChoosenOffers} from './point-offer.js';
 
@@ -64,12 +65,10 @@ const generatePoint = (id) => {
 };
 
 const generateData = (pointsCount) => new Array(pointsCount).fill().map((value, index) => generatePoint(index + 1));
-const sortPointsByDate = (pointsArray) => pointsArray.sort((pointOne, pointTwo) => pointOne.dateFrom - pointTwo.dateFrom);
 
 const points = generateData(POINTS_COUNT);
-const pointsByDate = sortPointsByDate(points);
+const pointsByDate = points.sort(sortPointsByDayUp);
 
-const startTime = pointsByDate[0].dateFrom;
 const endTime = pointsByDate[pointsByDate.length - 1].dateTo;
 
 const getPointDefault = () => (
@@ -91,7 +90,5 @@ const pointDefault = getPointDefault();
 export {
   DESTINATIONS,
   pointsByDate,
-  startTime,
-  endTime,
   pointDefault
 };

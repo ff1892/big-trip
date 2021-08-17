@@ -1,5 +1,5 @@
 import AbstractComponentView from './abstract-component.js';
-import {getHumanizedDuration, getTimefromDate, getDateAttribute, getDateTimeAttribute, getHumanizedDate} from '../utils/util-time.js';
+import {getHumanizedDuration, getTimefromDate, getDateAttribute, getDateTimeAttribute, getHumanizedDate} from '../utils/time.js';
 
 const createPointTemplate = (point) => {
   const {type, name, isFavorite, dateFrom, dateTo, price, offers} = point;
@@ -63,6 +63,7 @@ export default class Point extends AbstractComponentView {
     this._point = point;
 
     this._editClickHandler = this._editClickHandler.bind(this);
+    this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
   }
 
   getTemplate() {
@@ -74,8 +75,18 @@ export default class Point extends AbstractComponentView {
     this._callback.editClick();
   }
 
+  _favoriteClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.favoriteClick();
+  }
+
   setEditClickHandler(callback) {
     this._callback.editClick = callback;
     this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._editClickHandler);
+  }
+
+  setFavoriteClickHandler(callback) {
+    this._callback.favoriteClick = callback;
+    this.getElement().querySelector('.event__favorite-btn').addEventListener('click', this._favoriteClickHandler);
   }
 }
