@@ -7,5 +7,9 @@ const pageBody = document.querySelector('.page-body');
 const tripInfo = new TripInfoPresenter(pageBody);
 const trip = new TripPresenter(pageBody);
 
-tripInfo.init(pointsByDate);
-trip.init(pointsByDate);
+const initApp = () => {
+  tripInfo.init(pointsByDate);
+  trip.init(pointsByDate);
+};
+
+initApp();
