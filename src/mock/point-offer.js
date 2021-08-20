@@ -3,12 +3,14 @@ import {getRandomInteger, getShuffledArray} from '../utils/common.js';
 const OFFERS = ['Add luggage', 'Switch to comfort', 'Add meal', 'Choose seats', 'Travel by train', 'VIP service'];
 const OFFERS_COUNT_MIN = 0;
 const OFFERS_COUNT_MAX = 6;
+const CHOOSEN_OFFERS_COUNT_MIN = 0;
+const CHOOSEN_OFFERS_COUNT_MAX = 4;
 const MIN_OFFER_PRICE = 1;
 const MAX_OFFER_PRICE = 200;
 const EVENT_TYPES = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
 
 const getOfferOptions = () => {
-  const options = getShuffledArray(OFFERS);
+  const options = getShuffledArray(OFFERS).slice(0, getRandomInteger(OFFERS_COUNT_MIN, OFFERS_COUNT_MAX));
   const offerOptions = options.map((value) => (
     {
       title: value,
@@ -42,7 +44,7 @@ const getOffersForEvent = (type) => {
 
 const getChoosenOffers = (type) => {
   const events = getOffersForEvent(type);
-  return events.slice(0, getRandomInteger(OFFERS_COUNT_MIN, OFFERS_COUNT_MAX));
+  return events.slice(0, getRandomInteger(CHOOSEN_OFFERS_COUNT_MIN, CHOOSEN_OFFERS_COUNT_MAX));
 };
 
 export {
