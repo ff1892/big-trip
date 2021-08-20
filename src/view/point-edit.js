@@ -4,60 +4,76 @@ import {getLastWordFromString} from '../utils/components.js';
 import {getOffersForEvent} from '../mock/point-offer.js';
 import {DESTINATIONS, pointDefault} from '../mock/point-data.js';
 
-const createPointEditTemplate = (point) => {
-  const {type, name, dateFrom, dateTo, price, offers, destination, id} = point;
-  const {description, pictures} = destination;
-  const eventOffers = getOffersForEvent(type);
+const createOfferTemplate = (id, offer, offerList) => (`<div class="event__offer-selector">
+  <input class="event__offer-checkbox visually-hidden"
+  id="event-offer-${getLastWordFromString(offer.title)}-${id}"
+  type="checkbox" name="event-offer-${getLastWordFromString(offer.title)}"
+  ${offerList.includes(offer) ? 'checked' : ''}>
 
-  const isSelectedOffer = (offer) => offers.includes(offer);
+  <label class="event__offer-label"
+  for="event-offer-${getLastWordFromString(offer.title)}-${id}">
+    <span class="event__offer-title">${offer.title}</span>
+    &plus;&euro;&nbsp;
+    <span class="event__offer-price">${offer.price}</span>
+  </label>
+  </div>`
+);
 
-  const createOfferTemplate = (offer) => (`<div class="event__offer-selector">
-    <input class="event__offer-checkbox visually-hidden" id="event-offer-${getLastWordFromString(offer.title)}-${id}" type="checkbox" name="event-offer-${getLastWordFromString(offer.title)}" ${isSelectedOffer(offer) ? 'checked' : ''}>
-    <label class="event__offer-label" for="event-offer-${getLastWordFromString(offer.title)}-${id}">
-      <span class="event__offer-title">${offer.title}</span>
-      &plus;&euro;&nbsp;
-      <span class="event__offer-price">${offer.price}</span>
-    </label>
-    </div>`);
+const createOffersListTemplate = (id, offersData, offerList) => {
+  return !offersData.length
+  ? ''
+  : `<section class="event__section  event__section--offers">
+  <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+  <div class="event__available-offers">
+  ${offersData.map((offer) =>
+      createOfferTemplate(id, offer, offerList))
+      .join('')}
+  </div>
+  </section>`
+};
 
-  const createOffersListTemplate = (offersData) => {
-    const offersList = offersData.map((offer) => createOfferTemplate(offer)).join('');
-    return (`<section class="event__section  event__section--offers">
-        <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-        <div class="event__available-offers">
-        ${offersList}
-        </div>
-      </section>`);
-  };
+const createPicturesTemplate = (picturesList) => {
+  if (!picturesList.length) {
+    return '';
+  }
 
-  const renderOffers = () => eventOffers.length ? createOffersListTemplate(eventOffers) : '';
-
-  const createPicturesTemplate = (picturesList) => {
-    const picturesTemplate = picturesList.map((picture) => (`<img class="event__photo"
+  const picturesTemplate = picturesList.map((picture) => (`<img class="event__photo"
       src="${picture.src}" alt="${picture.description}"></img>`))
       .join('');
 
-    return `<div class="event__photos-container">
-      <div class="event__photos-tape">
-        ${picturesTemplate}
-      </div>
+  return `<div class="event__photos-container">
+    <div class="event__photos-tape">
+      ${picturesTemplate}
+    </div>
     </div>`;
-  };
+};
 
-  const renderPictures = () => pictures.length ? createPicturesTemplate(pictures) : '';
-
-  const createDestinationTemplate = () => (`<section class="event__section  event__section--destination">
+const createDestinationTemplate = (destination, description, picturesList) => {
+  return destination === ''
+  ? ''
+  : `<section class="event__section  event__section--destination">
   <h3 class="event__section-title  event__section-title--destination">Destination</h3>
   <p class="event__destination-description">${description}</p>
-  ${renderPictures()}
-  </section>`);
+  ${createPicturesTemplate(picturesList)}
+  </section>`
+};
 
-  const renderDestination = () => destination !== '' ? createDestinationTemplate() : '';
+const createDestinationListTemplate = (destinationsList, id) => {
+  const destinationList = destinationsList.map((destinationItem) =>
+    `<option value="${destinationItem}"></option>`)
+    .join('');
+  return `<datalist id="destination-list-${id}">${destinationList}</datalist>`;
+};
 
-  const createDestinationListTemplate = (list) => {
-    const destinationList = list.map((destinationItem) => `<option value="${destinationItem}"></option>`).join('');
-    return `<datalist id="destination-list-${id}">${destinationList}</datalist>`;
-  };
+
+const createPointEditTemplate = (point) => {
+  const {type, name, dateFrom, dateTo, price, offers, destination, id} = point;
+  const {description, pictures} = destination;
+
+  const eventOffers = getOffersForEvent(type);
+  const offersListTemplate = createOffersListTemplate(id, eventOffers, offers);
+  const destinationTemplate = createDestinationTemplate(destination, description, pictures);
+  const destinationListTemplate = createDestinationListTemplate(DESTINATIONS, id);
 
   return `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
@@ -131,7 +147,7 @@ const createPointEditTemplate = (point) => {
             ${type}
           </label>
           <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${name}" list="destination-list-${id}">
-          ${createDestinationListTemplate(DESTINATIONS)}
+          ${destinationListTemplate}
         </div>
 
         <div class="event__field-group  event__field-group--time">
@@ -157,8 +173,8 @@ const createPointEditTemplate = (point) => {
         </button>
       </header>
       <section class="event__details">
-        ${renderOffers()}
-        ${renderDestination()}
+        ${offersListTemplate}
+        ${destinationTemplate}
       </section>
     </form>
   </li>`;
