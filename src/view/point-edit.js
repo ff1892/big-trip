@@ -1,4 +1,4 @@
-import AbstractComponentView from './abstract-component.js';
+import SmartView from './smart.js';
 import {getNumeralDate} from '../utils/time.js';
 import {getLastWordFromString} from '../utils/components.js';
 import {DESTINATIONS, pointDefault} from '../mock/point-data.js';
@@ -138,7 +138,7 @@ const createPointEditTemplate = (point) => {
   </li>`;
 };
 
-export default class PointEdit extends AbstractComponentView {
+export default class PointEdit extends SmartView {
   constructor(point = pointDefault, offerData, destinationData) {
     super();
     this._data = PointEdit.parsePointToData(point, offerData);
@@ -147,8 +147,9 @@ export default class PointEdit extends AbstractComponentView {
 
     this._editClickHandler = this._editClickHandler.bind(this);
     this._submitHandler = this._submitHandler.bind(this);
-    this._nameChangeHandler = this._nameChangeHandler.bind(this);
     this._typeChangeHandler = this._typeChangeHandler.bind(this);
+    this._nameChangeHandler = this._nameChangeHandler.bind(this);
+    this._priceChangeHandler = this._priceChangeHandler.bind(this);
 
     this._setInnerHandlers();
   }
@@ -157,33 +158,20 @@ export default class PointEdit extends AbstractComponentView {
     return createPointEditTemplate(this._data);
   }
 
-  updateData(update, noUpdatingElement = false) {
-    if(!update) {
-      return;
-    }
-
-    this._data = Object.assign(
-      {},
-      this._data,
-      update,
+  reset(point) {
+    this.updateData(
+      PointEdit.parsePointToData(point, this._offerData),
     );
-
-    if (noUpdatingElement) {
-      return;
-    }
-
-    this.updateElement();
   }
 
-  updateElement() {
-    const prevElement = this.getElement();
-    const parent = prevElement.parentElement;
-    this.removeElement();
-
-    const newElement = this.getElement();
-    parent.replaceChild(newElement, prevElement);
-
-    this.restoreHandlers();
+  _typeChangeHandler(evt) {
+    evt.preventDefault();
+    this.updateData({
+      type: evt.target.value,
+      offers: [],
+      eventOffers: this._pickEventOffers(evt.target.value),
+      hasOfferList: !!(this._pickEventOffers(evt.target.value).length),
+    });
   }
 
   _nameChangeHandler(evt) {
@@ -196,13 +184,11 @@ export default class PointEdit extends AbstractComponentView {
     });
   }
 
-  _typeChangeHandler(evt) {
+  _priceChangeHandler(evt) {
     evt.preventDefault();
     this.updateData({
-      type: evt.target.value,
-      offers: [],
-      eventOffers: this._pickEventOffers(evt.target.value),
-    });
+      price: evt.target.value,
+    }, true);
   }
 
   _editClickHandler(evt) {
@@ -232,6 +218,9 @@ export default class PointEdit extends AbstractComponentView {
     this.getElement()
       .querySelector('.event__type-group')
       .addEventListener('change', this._typeChangeHandler);
+    this.getElement()
+      .querySelector('.event__input--price')
+      .addEventListener('change', this._priceChangeHandler);
   }
 
   restoreHandlers() {
