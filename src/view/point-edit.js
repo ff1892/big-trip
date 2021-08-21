@@ -1,7 +1,7 @@
 import AbstractComponentView from './abstract-component.js';
 import {getNumeralDate} from '../utils/time.js';
 import {getLastWordFromString} from '../utils/components.js';
-import {getOffersForEvent} from '../mock/point-offer.js';
+import {getOffersForEvent, offerData} from '../mock/point-offer.js';
 import {DESTINATIONS, pointDefault} from '../mock/point-data.js';
 
 const createOfferTemplate = (id, offer, offerList) => (`<div class="event__offer-selector">
@@ -31,6 +31,7 @@ const createOffersListTemplate = (id, offersData, offerList) => {
   </div>
   </section>`
 };
+
 
 const createPicturesTemplate = (picturesList) => {
   if (!picturesList.length) {
@@ -70,7 +71,7 @@ const createPointEditTemplate = (point) => {
   const {type, name, dateFrom, dateTo, price, offers, destination, id} = point;
   const {description, pictures} = destination;
 
-  const eventOffers = getOffersForEvent(type);
+  const eventOffers = getOffersForEvent(type, offerData);
   const offersListTemplate = createOffersListTemplate(id, eventOffers, offers);
   const destinationTemplate = createDestinationTemplate(destination, description, pictures);
   const destinationListTemplate = createDestinationListTemplate(DESTINATIONS, id);

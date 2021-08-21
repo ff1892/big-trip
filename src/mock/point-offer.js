@@ -34,21 +34,22 @@ const getOfferList = () => {
 
 const offerData = getOfferList();
 
-const getOffersForEvent = (type) => {
-  for (const offer of offerData) {
-    if (offer.type === type) {
-      return offer.offers;
-    }
-  }
+const getOffersForEvent = (type, offerData) => {
+  const offersForEvents = offerData.find(offer => offer.type === type);
+  return offersForEvents
+  ? offersForEvents.offers
+  : '';
 };
 
-const getChoosenOffers = (type) => {
-  const events = getOffersForEvent(type);
+
+const getChoosenOffers = (type, offerData) => {
+  const events = getOffersForEvent(type, offerData);
   return events.slice(0, getRandomInteger(CHOOSEN_OFFERS_COUNT_MIN, CHOOSEN_OFFERS_COUNT_MAX));
 };
 
 export {
   EVENT_TYPES,
+  offerData,
   getOffersForEvent,
   getChoosenOffers
 };

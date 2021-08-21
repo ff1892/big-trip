@@ -1,5 +1,6 @@
-import {getRandomInteger} from '../utils/common.js';
+import {getRandomInteger, getShuffledArray} from '../utils/common.js';
 
+const DESTINATIONS = ['Rome', 'Naples', 'Venice', 'Turin', 'Palermo', 'Florence'];
 const PICTURES_COUNT_MIN = 0;
 const PICTURES_COUNT_MAX = 5;
 const BASIC_PICTURE_SRC = 'http://picsum.photos/248/152?r=';
@@ -42,6 +43,15 @@ const getDestination = (destinationName) => {
   return destination;
 };
 
-const getDestinationsList = (destinations) => destinations.map((value) => getDestination(value));
+const getDestinationsList = (destinations) => {
+  const shuffledDestinations = getShuffledArray(destinations)
+    .slice(0, getRandomInteger(1, destinations.length));
+  return shuffledDestinations.map((value) => getDestination(value));
+};
 
-export {getDestinationsList};
+const destinationData = getDestinationsList(DESTINATIONS);
+
+export {
+  DESTINATIONS,
+  destinationData
+};
