@@ -2,6 +2,7 @@ import AbstractComponentView from './abstract-component.js';
 import {getNumeralDate} from '../utils/time.js';
 import {getLastWordFromString} from '../utils/components.js';
 import {DESTINATIONS, pointDefault} from '../mock/point-data.js';
+import {POINT_TYPES} from '../const.js';
 
 const createOfferTemplate = (id, offer, offerList) => (`<div class="event__offer-selector">
   <input class="event__offer-checkbox visually-hidden"
@@ -62,6 +63,14 @@ const createDestinationListTemplate = (destinationsList, id) => {
   return `<datalist id="destination-list-${id}">${destinationList}</datalist>`;
 };
 
+const createTypeTemplate = (pointType, id, type) => (`<div class="event__type-item">
+    <input id="event-type-${pointType}-${id}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${pointType}" ${pointType === type ? 'checked' : ''}>
+    <label class="event__type-label  event__type-label--${pointType}" for="event-type-${pointType}-${id}">
+    ${pointType.charAt(0).toUpperCase()}${pointType.slice(1)}</label></div>`);
+
+const createTypeListTemplate = (pointTypes, id, type) => (
+  pointTypes.map((pointType) => createTypeTemplate(pointType, id, type)).join('')
+);
 
 const createPointEditTemplate = (point) => {
   const {type, dateFrom, dateTo, price, offers,
@@ -71,6 +80,7 @@ const createPointEditTemplate = (point) => {
   const offersListTemplate = createOffersListTemplate(hasOfferList, eventOffers, offers, id);
   const destinationTemplate = createDestinationTemplate(hasDescription, description, pictures);
   const destinationListTemplate = createDestinationListTemplate(DESTINATIONS, id);
+  const typeListTemplate = createTypeListTemplate(POINT_TYPES, id, type);
 
   return `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
@@ -85,56 +95,7 @@ const createPointEditTemplate = (point) => {
           <div class="event__type-list">
             <fieldset class="event__type-group">
               <legend class="visually-hidden">Event type</legend>
-
-              <div class="event__type-item">
-                <input id="event-type-taxi-${id}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="taxi">
-                <label class="event__type-label  event__type-label--taxi" for="event-type-taxi-${id}">Taxi</label>
-              </div>
-
-              <div class="event__type-item">
-                <input id="event-type-bus-${id}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="bus">
-                <label class="event__type-label  event__type-label--bus" for="event-type-bus-${id}">Bus</label>
-              </div>
-
-              <div class="event__type-item">
-                <input id="event-type-train-${id}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="train">
-                <label class="event__type-label  event__type-label--train" for="event-type-train-${id}">Train</label>
-              </div>
-
-              <div class="event__type-item">
-                <input id="event-type-ship-${id}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="ship">
-                <label class="event__type-label  event__type-label--ship" for="event-type-ship-${id}">Ship</label>
-              </div>
-
-              <div class="event__type-item">
-                <input id="event-type-transport-${id}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="transport">
-                <label class="event__type-label  event__type-label--transport" for="event-type-transport-${id}">Transport</label>
-              </div>
-
-              <div class="event__type-item">
-                <input id="event-type-drive-${id}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="drive">
-                <label class="event__type-label  event__type-label--drive" for="event-type-drive-${id}">Drive</label>
-              </div>
-
-              <div class="event__type-item">
-                <input id="event-type-flight-${id}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="flight" checked>
-                <label class="event__type-label  event__type-label--flight" for="event-type-flight-${id}">Flight</label>
-              </div>
-
-              <div class="event__type-item">
-                <input id="event-type-check-in-${id}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="check-in">
-                <label class="event__type-label  event__type-label--check-in" for="event-type-check-in-${id}">Check-in</label>
-              </div>
-
-              <div class="event__type-item">
-                <input id="event-type-sightseeing-${id}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="sightseeing">
-                <label class="event__type-label  event__type-label--sightseeing" for="event-type-sightseeing-${id}">Sightseeing</label>
-              </div>
-
-              <div class="event__type-item">
-                <input id="event-type-restaurant-${id}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="restaurant">
-                <label class="event__type-label  event__type-label--restaurant" for="event-type-restaurant-${id}">Restaurant</label>
-              </div>
+              ${typeListTemplate}
             </fieldset>
           </div>
         </div>
@@ -181,22 +142,22 @@ export default class PointEdit extends AbstractComponentView {
   constructor(point = pointDefault, offerData, destinationData) {
     super();
     this._data = PointEdit.parsePointToData(point, offerData);
+    this._offerData = offerData;
     this._destinationData = destinationData;
 
     this._editClickHandler = this._editClickHandler.bind(this);
     this._submitHandler = this._submitHandler.bind(this);
     this._nameChangeHandler = this._nameChangeHandler.bind(this);
+    this._typeChangeHandler = this._typeChangeHandler.bind(this);
 
-    this.getElement()
-      .querySelector('.event__input--destination')
-      .addEventListener('change', this._nameChangeHandler);
+    this._setInnerHandlers();
   }
 
   getTemplate() {
     return createPointEditTemplate(this._data);
   }
 
-  updateData(update) {
+  updateData(update, noUpdatingElement = false) {
     if(!update) {
       return;
     }
@@ -207,6 +168,10 @@ export default class PointEdit extends AbstractComponentView {
       update,
     );
 
+    if (noUpdatingElement) {
+      return;
+    }
+
     this.updateElement();
   }
 
@@ -214,8 +179,11 @@ export default class PointEdit extends AbstractComponentView {
     const prevElement = this.getElement();
     const parent = prevElement.parentElement;
     this.removeElement();
+
     const newElement = this.getElement();
     parent.replaceChild(newElement, prevElement);
+
+    this.restoreHandlers();
   }
 
   _nameChangeHandler(evt) {
@@ -225,6 +193,15 @@ export default class PointEdit extends AbstractComponentView {
       destination:
         currentDestination,
       hasDescription: currentDestination.description.length || currentDestination.pictures.length,
+    });
+  }
+
+  _typeChangeHandler(evt) {
+    evt.preventDefault();
+    this.updateData({
+      type: evt.target.value,
+      offers: [],
+      eventOffers: this._pickEventOffers(evt.target.value),
     });
   }
 
@@ -248,8 +225,27 @@ export default class PointEdit extends AbstractComponentView {
     this.getElement().querySelector('.event--edit').addEventListener('submit', this._submitHandler);
   }
 
+  _setInnerHandlers() {
+    this.getElement()
+      .querySelector('.event__input--destination')
+      .addEventListener('change', this._nameChangeHandler);
+    this.getElement()
+      .querySelector('.event__type-group')
+      .addEventListener('change', this._typeChangeHandler);
+  }
+
+  restoreHandlers() {
+    this._setInnerHandlers();
+    this.setEditClickHandler(this._callback.editClick);
+    this.setSubmitHandler(this._callback.submit);
+  }
+
   _pickCurrentDestination(name) {
     return this._destinationData.find((destination) => destination.name === name);
+  }
+
+  _pickEventOffers(type) {
+    return this._offerData.find((offer) => offer.type === type).offers;
   }
 
   static parsePointToData(point, offerData) {
