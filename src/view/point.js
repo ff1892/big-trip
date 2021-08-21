@@ -10,19 +10,18 @@ const createOfferTemplate = (title, price) => (`
   </li>
 `);
 
-const createSelectedOffersTemplate = (offers) => {
-  return !offers.length
+const createSelectedOffersTemplate = (offers) => !offers.length
   ? ''
   : `<h4 class="visually-hidden">Offers:</h4>
     <ul class="event__selected-offers">
     ${offers.map((offer) =>
-      createOfferTemplate(offer.title, offer.price))
-      .join('')}
+    createOfferTemplate(offer.title, offer.price))
+    .join('')}
     </ul>`;
-};
 
 const createPointTemplate = (point) => {
-  const {type, name, isFavorite, dateFrom, dateTo, price, offers} = point;
+  const {type, destination, isFavorite, dateFrom, dateTo, price, offers} = point;
+  const {name} = destination;
 
   const selectedOfferTemplate = createSelectedOffersTemplate(offers);
 

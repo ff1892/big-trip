@@ -1,4 +1,4 @@
-import {getRandomInteger, getShuffledArray} from '../utils/common.js';
+import {getRandomInteger} from '../utils/common.js';
 
 const DESTINATIONS = ['Rome', 'Naples', 'Venice', 'Turin', 'Palermo', 'Florence'];
 const PICTURES_COUNT_MIN = 0;
@@ -13,7 +13,7 @@ const descriptionText = {
   Turin:
     'A city and an important business and cultural centre in northern Italy. It is the capital city of Piedmont and of the Metropolitan City of Turin, and was the first Italian capital from 1861 to 1865.',
   Venice:
-    'The name is derived from the ancient Veneti people who inhabited the region by the 10th century BC.',
+    '',
   Naples:
     'The regional capital of Campania and the third-largest city of Italy, after Rome and Milan, with a population of 967,069 within the city\'s administrative limits as of 2017.',
   Rome:
@@ -43,11 +43,8 @@ const getDestination = (destinationName) => {
   return destination;
 };
 
-const getDestinationsList = (destinations) => {
-  const shuffledDestinations = getShuffledArray(destinations)
-    .slice(0, getRandomInteger(1, destinations.length));
-  return shuffledDestinations.map((value) => getDestination(value));
-};
+const getDestinationsList = (destinations) => destinations.map((city) => getDestination(city));
+
 
 const destinationData = getDestinationsList(DESTINATIONS);
 

@@ -1,7 +1,6 @@
 import AbstractComponentView from './abstract-component.js';
 import {getNumeralDate} from '../utils/time.js';
 import {getLastWordFromString} from '../utils/components.js';
-import {getOffersForEvent, offerData} from '../mock/point-offer.js';
 import {DESTINATIONS, pointDefault} from '../mock/point-data.js';
 
 const createOfferTemplate = (id, offer, offerList) => (`<div class="event__offer-selector">
@@ -19,18 +18,17 @@ const createOfferTemplate = (id, offer, offerList) => (`<div class="event__offer
   </div>`
 );
 
-const createOffersListTemplate = (id, offersData, offerList) => {
-  return !offersData.length
-  ? ''
-  : `<section class="event__section  event__section--offers">
-  <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-  <div class="event__available-offers">
-  ${offersData.map((offer) =>
-      createOfferTemplate(id, offer, offerList))
-      .join('')}
-  </div>
-  </section>`
-};
+const createOffersListTemplate = (hasOfferList, offersData, offerList, id) =>
+  !hasOfferList
+    ? ''
+    : `<section class="event__section  event__section--offers">
+    <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+    <div class="event__available-offers">
+    ${offersData.map((offer) =>
+    createOfferTemplate(id, offer, offerList))
+    .join('')}
+    </div>
+    </section>`;
 
 
 const createPicturesTemplate = (picturesList) => {
@@ -40,7 +38,7 @@ const createPicturesTemplate = (picturesList) => {
 
   const picturesTemplate = picturesList.map((picture) => (`<img class="event__photo"
       src="${picture.src}" alt="${picture.description}"></img>`))
-      .join('');
+    .join('');
 
   return `<div class="event__photos-container">
     <div class="event__photos-tape">
@@ -49,15 +47,13 @@ const createPicturesTemplate = (picturesList) => {
     </div>`;
 };
 
-const createDestinationTemplate = (destination, description, picturesList) => {
-  return destination === ''
+const createDestinationTemplate = (hasDescription, description, picturesList) => !hasDescription
   ? ''
   : `<section class="event__section  event__section--destination">
-  <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-  <p class="event__destination-description">${description}</p>
-  ${createPicturesTemplate(picturesList)}
-  </section>`
-};
+    <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+    <p class="event__destination-description">${description}</p>
+    ${createPicturesTemplate(picturesList)}
+    </section>`;
 
 const createDestinationListTemplate = (destinationsList, id) => {
   const destinationList = destinationsList.map((destinationItem) =>
@@ -68,12 +64,12 @@ const createDestinationListTemplate = (destinationsList, id) => {
 
 
 const createPointEditTemplate = (point) => {
-  const {type, name, dateFrom, dateTo, price, offers, destination, id} = point;
-  const {description, pictures} = destination;
+  const {type, dateFrom, dateTo, price, offers,
+    hasDescription, destination, id, hasOfferList, eventOffers} = point;
+  const {description, pictures, name} = destination;
 
-  const eventOffers = getOffersForEvent(type, offerData);
-  const offersListTemplate = createOffersListTemplate(id, eventOffers, offers);
-  const destinationTemplate = createDestinationTemplate(destination, description, pictures);
+  const offersListTemplate = createOffersListTemplate(hasOfferList, eventOffers, offers, id);
+  const destinationTemplate = createDestinationTemplate(hasDescription, description, pictures);
   const destinationListTemplate = createDestinationListTemplate(DESTINATIONS, id);
 
   return `<li class="trip-events__item">
@@ -182,16 +178,54 @@ const createPointEditTemplate = (point) => {
 };
 
 export default class PointEdit extends AbstractComponentView {
-  constructor(point = pointDefault) {
+  constructor(point = pointDefault, offerData, destinationData) {
     super();
-    this._point = point;
+    this._data = PointEdit.parsePointToData(point, offerData);
+    this._destinationData = destinationData;
 
     this._editClickHandler = this._editClickHandler.bind(this);
     this._submitHandler = this._submitHandler.bind(this);
+    this._nameChangeHandler = this._nameChangeHandler.bind(this);
+
+    this.getElement()
+      .querySelector('.event__input--destination')
+      .addEventListener('change', this._nameChangeHandler);
   }
 
   getTemplate() {
-    return createPointEditTemplate(this._point);
+    return createPointEditTemplate(this._data);
+  }
+
+  updateData(update) {
+    if(!update) {
+      return;
+    }
+
+    this._data = Object.assign(
+      {},
+      this._data,
+      update,
+    );
+
+    this.updateElement();
+  }
+
+  updateElement() {
+    const prevElement = this.getElement();
+    const parent = prevElement.parentElement;
+    this.removeElement();
+    const newElement = this.getElement();
+    parent.replaceChild(newElement, prevElement);
+  }
+
+  _nameChangeHandler(evt) {
+    evt.preventDefault();
+    const currentDestination = this._pickCurrentDestination(evt.target.value);
+    this.updateData({
+      destination:
+        currentDestination,
+      hasDescription: currentDestination.description.length || currentDestination.pictures.length,
+    });
   }
 
   _editClickHandler(evt) {
@@ -212,5 +246,33 @@ export default class PointEdit extends AbstractComponentView {
   setSubmitHandler(callback) {
     this._callback.submit = callback;
     this.getElement().querySelector('.event--edit').addEventListener('submit', this._submitHandler);
+  }
+
+  _pickCurrentDestination(name) {
+    return this._destinationData.find((destination) => destination.name === name);
+  }
+
+  static parsePointToData(point, offerData) {
+    return Object.assign(
+      {},
+      point,
+      {
+        hasOfferList:!!offerData.find((offer) =>
+          offer.type === point.type).offers.length,
+        eventOffers: offerData.find((offer) =>
+          offer.type === point.type).offers,
+        hasDescription: !!(point.destination.description.length || point.destination.pictures.length),
+      },
+    );
+  }
+
+  static parseDataToPoint(data) {
+    data = Object.assign({}, data);
+
+    delete data.hasOfferList;
+    delete data.eventOffers;
+    delete data.hasDescription;
+
+    return data;
   }
 }

@@ -17,9 +17,7 @@ const getEventType = () => getRandomArrayValue(EVENT_TYPES);
 
 const getDestinationForCity = (dataList, city) => {
   const currentDestination = dataList.find((destination) => destination.name === city);
-  return currentDestination
-  ? currentDestination
-  : '';
+  return currentDestination ? currentDestination : '';
 };
 
 const generateDate = () => {
@@ -59,7 +57,6 @@ const generatePoint = (id) => {
   const point = {
     id,
     type,
-    name: destinationName,
     price: getRandomInteger(MIN_PRICE, MAX_PRICE),
     dateFrom: date.min,
     dateTo: date.max,
