@@ -7,7 +7,8 @@ import {POINT_TYPES} from '../const.js';
 const createOfferTemplate = (id, offer, offerList) => (`<div class="event__offer-selector">
   <input class="event__offer-checkbox visually-hidden"
   id="event-offer-${getLastWordFromString(offer.title)}-${id}"
-  type="checkbox" name="event-offer-${getLastWordFromString(offer.title)}"
+  type="checkbox"
+  name="event-offer-${getLastWordFromString(offer.title)}"
   ${offerList.includes(offer) ? 'checked' : ''}>
 
   <label class="event__offer-label"
@@ -63,10 +64,21 @@ const createDestinationListTemplate = (destinationsList, id) => {
   return `<datalist id="destination-list-${id}">${destinationList}</datalist>`;
 };
 
-const createTypeTemplate = (pointType, id, type) => (`<div class="event__type-item">
-    <input id="event-type-${pointType}-${id}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${pointType}" ${pointType === type ? 'checked' : ''}>
-    <label class="event__type-label  event__type-label--${pointType}" for="event-type-${pointType}-${id}">
-    ${pointType.charAt(0).toUpperCase()}${pointType.slice(1)}</label></div>`);
+const createTypeTemplate = (pointType, id, type) => (
+  `<div class="event__type-item">
+    <input id="event-type-${pointType}-${id}"
+      class="event__type-input visually-hidden"
+      type="radio"
+      name="event-type"
+      value="${pointType}"
+      ${pointType === type ? 'checked' : ''}
+    >
+    <label class="event__type-label  event__type-label--${pointType}"
+      for="event-type-${pointType}-${id}">
+      ${pointType.charAt(0).toUpperCase()}${pointType.slice(1)}
+    </label>
+  </div>`
+);
 
 const createTypeListTemplate = (pointTypes, id, type) => (
   pointTypes.map((pointType) => createTypeTemplate(pointType, id, type)).join('')
