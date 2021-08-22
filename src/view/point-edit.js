@@ -4,12 +4,12 @@ import {getLastWordFromString} from '../utils/components.js';
 import {DESTINATIONS, pointDefault} from '../mock/point-data.js';
 import {POINT_TYPES} from '../const.js';
 
-const createOfferTemplate = (id, offer, offerList) => (`<div class="event__offer-selector">
+const createOfferTemplate = (id, offer, offers) => (`<div class="event__offer-selector">
   <input class="event__offer-checkbox visually-hidden"
   id="event-offer-${getLastWordFromString(offer.title)}-${id}"
   type="checkbox"
   name="event-offer-${getLastWordFromString(offer.title)}"
-  ${offerList.includes(offer) ? 'checked' : ''}>
+  ${offers.includes(offer) ? 'checked' : ''}>
 
   <label class="event__offer-label"
   for="event-offer-${getLastWordFromString(offer.title)}-${id}">
@@ -20,18 +20,19 @@ const createOfferTemplate = (id, offer, offerList) => (`<div class="event__offer
   </div>`
 );
 
-const createOffersListTemplate = (hasOfferList, offersData, offerList, id) =>
-  !hasOfferList
+const createOffersListTemplate = (type, id, offers, offerData) => {
+  const currentOffers = offerData.find((currentOffer) => currentOffer.type === type).offers;
+  return !currentOffers.length
     ? ''
     : `<section class="event__section  event__section--offers">
-    <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-    <div class="event__available-offers">
-    ${offersData.map((offer) =>
-    createOfferTemplate(id, offer, offerList))
+  <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+  <div class="event__available-offers">
+  ${currentOffers.map((offer) =>
+    createOfferTemplate(id, offer, offers))
     .join('')}
-    </div>
-    </section>`;
-
+  </div>
+  </section>`;
+};
 
 const createPicturesTemplate = (picturesList) => {
   if (!picturesList.length) {
@@ -49,13 +50,16 @@ const createPicturesTemplate = (picturesList) => {
     </div>`;
 };
 
-const createDestinationTemplate = (hasDescription, description, picturesList) => !hasDescription
-  ? ''
-  : `<section class="event__section  event__section--destination">
+const createDestinationTemplate = (city, destinationData) => {
+  const currentDestination = destinationData.find((destination) => destination.name === city);
+  return !(currentDestination.description.length || currentDestination.pictures.length)
+    ? ''
+    : `<section class="event__section  event__section--destination">
     <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-    <p class="event__destination-description">${description}</p>
-    ${createPicturesTemplate(picturesList)}
+    <p class="event__destination-description">${currentDestination.description}</p>
+    ${createPicturesTemplate(currentDestination.pictures)}
     </section>`;
+};
 
 const createDestinationListTemplate = (destinationsList, id) => {
   const destinationList = destinationsList.map((destinationItem) =>
@@ -75,7 +79,7 @@ const createTypeTemplate = (pointType, id, type) => (
     >
     <label class="event__type-label  event__type-label--${pointType}"
       for="event-type-${pointType}-${id}">
-      ${pointType.charAt(0).toUpperCase()}${pointType.slice(1)}
+      ${pointType[0].toUpperCase() + pointType.slice(1)}
     </label>
   </div>`
 );
@@ -84,13 +88,12 @@ const createTypeListTemplate = (pointTypes, id, type) => (
   pointTypes.map((pointType) => createTypeTemplate(pointType, id, type)).join('')
 );
 
-const createPointEditTemplate = (point) => {
-  const {type, dateFrom, dateTo, price, offers,
-    hasDescription, destination, id, hasOfferList, eventOffers} = point;
-  const {description, pictures, name} = destination;
+const createPointEditTemplate = (point, offerData, destinationData) => {
+  const {type, dateFrom, dateTo, price, offers, destination, id} = point;
+  const {name} = destination;
 
-  const offersListTemplate = createOffersListTemplate(hasOfferList, eventOffers, offers, id);
-  const destinationTemplate = createDestinationTemplate(hasDescription, description, pictures);
+  const offersListTemplate = createOffersListTemplate(type, id, offers, offerData);
+  const destinationTemplate = createDestinationTemplate(name, destinationData);
   const destinationListTemplate = createDestinationListTemplate(DESTINATIONS, id);
   const typeListTemplate = createTypeListTemplate(POINT_TYPES, id, type);
 
@@ -100,7 +103,7 @@ const createPointEditTemplate = (point) => {
         <div class="event__type-wrapper">
           <label class="event__type  event__type-btn" for="event-type-toggle-${id}">
             <span class="visually-hidden">Choose event type</span>
-            <img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="${type.charAt(0).toUpperCase()}${type.slice(1)} type icon">
+            <img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="${type[0].toUpperCase() + type.slice(1)} type icon">
           </label>
           <input class="event__type-toggle  visually-hidden" id="event-type-toggle-${id}" type="checkbox">
 
@@ -153,7 +156,7 @@ const createPointEditTemplate = (point) => {
 export default class PointEdit extends SmartView {
   constructor(point = pointDefault, offerData, destinationData) {
     super();
-    this._data = PointEdit.parsePointToData(point, offerData);
+    this._data = PointEdit.parsePointToData(point);
     this._offerData = offerData;
     this._destinationData = destinationData;
 
@@ -167,12 +170,12 @@ export default class PointEdit extends SmartView {
   }
 
   getTemplate() {
-    return createPointEditTemplate(this._data);
+    return createPointEditTemplate(this._data, this._offerData, this._destinationData);
   }
 
   reset(point) {
     this.updateData(
-      PointEdit.parsePointToData(point, this._offerData),
+      PointEdit.parsePointToData(point),
     );
   }
 
@@ -180,19 +183,14 @@ export default class PointEdit extends SmartView {
     evt.preventDefault();
     this.updateData({
       type: evt.target.value,
-      offers: [],
-      eventOffers: this._pickEventOffers(evt.target.value),
-      hasOfferList: !!(this._pickEventOffers(evt.target.value).length),
     });
   }
 
   _nameChangeHandler(evt) {
-    evt.preventDefault();
-    const currentDestination = this._pickCurrentDestination(evt.target.value);
     this.updateData({
-      destination:
-        currentDestination,
-      hasDescription: currentDestination.description.length || currentDestination.pictures.length,
+      destination: {
+        name: evt.target.value,
+      },
     });
   }
 
@@ -241,26 +239,8 @@ export default class PointEdit extends SmartView {
     this.setSubmitHandler(this._callback.submit);
   }
 
-  _pickCurrentDestination(name) {
-    return this._destinationData.find((destination) => destination.name === name);
-  }
-
-  _pickEventOffers(type) {
-    return this._offerData.find((offer) => offer.type === type).offers;
-  }
-
-  static parsePointToData(point, offerData) {
-    return Object.assign(
-      {},
-      point,
-      {
-        hasOfferList:!!offerData.find((offer) =>
-          offer.type === point.type).offers.length,
-        eventOffers: offerData.find((offer) =>
-          offer.type === point.type).offers,
-        hasDescription: !!(point.destination.description.length || point.destination.pictures.length),
-      },
-    );
+  static parsePointToData(point) {
+    return Object.assign({}, point);
   }
 
   static parseDataToPoint(data) {
