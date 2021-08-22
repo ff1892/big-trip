@@ -244,12 +244,6 @@ export default class PointEdit extends SmartView {
   }
 
   static parseDataToPoint(data) {
-    data = Object.assign({}, data);
-
-    delete data.hasOfferList;
-    delete data.eventOffers;
-    delete data.hasDescription;
-
-    return data;
+    return Object.assign({}, data);
   }
 }
