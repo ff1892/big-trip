@@ -1,3 +1,6 @@
+import flatpickr from 'flatpickr';
+import '../../node_modules/flatpickr/dist/flatpickr.min.css';
+
 import SmartView from './smart.js';
 import {getNumeralDate} from '../utils/time.js';
 import {getLastWordFromString} from '../utils/components.js';
@@ -125,11 +128,11 @@ const createPointEditTemplate = (point, offerData, destinationData) => {
         </div>
 
         <div class="event__field-group  event__field-group--time">
-          <label class="visually-hidden" for="event-start-time-${id}">From</label>
-          <input class="event__input  event__input--time" id="event-start-time-${id}" type="text" name="event-start-time" value="${getNumeralDate(dateFrom)}">
+          <label class="visually-hidden" for="event-start-time-1">From</label>
+          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${getNumeralDate(dateFrom)}">
           &mdash;
-          <label class="visually-hidden" for="event-end-time-${id}">To</label>
-          <input class="event__input  event__input--time" id="event-end-time-${id}" type="text" name="event-end-time" value="${getNumeralDate(dateTo)}">
+          <label class="visually-hidden" for="event-end-time-1">To</label>
+          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${getNumeralDate(dateTo)}">
         </div>
 
         <div class="event__field-group  event__field-group--price">
@@ -160,13 +163,16 @@ export default class PointEdit extends SmartView {
     this._data = PointEdit.parsePointToData(point);
     this._offerData = offerData;
     this._destinationData = destinationData;
+    this._datepicker = null;
 
     this._editClickHandler = this._editClickHandler.bind(this);
     this._submitHandler = this._submitHandler.bind(this);
     this._typeChangeHandler = this._typeChangeHandler.bind(this);
     this._nameChangeHandler = this._nameChangeHandler.bind(this);
     this._priceChangeHandler = this._priceChangeHandler.bind(this);
+    this._dateChangeHandler = this._dateChangeHandler.bind(this);
 
+    this._setDatePicker();
     this._setInnerHandlers();
   }
 
@@ -222,6 +228,36 @@ export default class PointEdit extends SmartView {
     this.getElement().querySelector('.event--edit').addEventListener('submit', this._submitHandler);
   }
 
+  _setDatePicker() {
+    if (this._datepicker) {
+      this._datepicker.destroy();
+      this._datepicker = null;
+    }
+
+    this._datepicker = flatpickr(
+      this.getElement().querySelector('#event-start-time-1'),
+      {
+        enableTime: true,
+        ['time_24hr']: true,
+        dateFormat: 'd/m/y H:i',
+        defaultDate: this._data.dateFrom,
+        onChange: this._dateChangeHandler,
+      },
+    );
+  }
+
+  _dateChangeHandler([userDate]) {
+    this.updateData({
+      dateFrom: userDate,
+    }, true);
+
+    if (this._data.dateFrom > this._data.dateTo) {
+      this.updateData({
+        dateTo: userDate,
+      });
+    }
+  }
+
   _setInnerHandlers() {
     this.getElement()
       .querySelector('.event__input--destination')
@@ -236,6 +272,7 @@ export default class PointEdit extends SmartView {
 
   restoreHandlers() {
     this._setInnerHandlers();
+    this._setDatePicker();
     this.setEditClickHandler(this._callback.editClick);
     this.setSubmitHandler(this._callback.submit);
   }
