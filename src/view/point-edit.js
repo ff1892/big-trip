@@ -4,7 +4,8 @@ import {getLastWordFromString} from '../utils/components.js';
 import {DESTINATIONS, pointDefault} from '../mock/point-data.js';
 import {POINT_TYPES} from '../const.js';
 
-const createOfferTemplate = (id, offer, offers) => (`<div class="event__offer-selector">
+const createOfferTemplate = (id, offer, offers) => (
+  `<div class="event__offer-selector">
   <input class="event__offer-checkbox visually-hidden"
   id="event-offer-${getLastWordFromString(offer.title)}-${id}"
   type="checkbox"
