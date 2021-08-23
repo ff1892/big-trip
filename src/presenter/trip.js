@@ -26,9 +26,11 @@ export default class Trip {
     this._pointPresenter = new Map();
   }
 
-  init(points) {
+  init(points, offerData, destinationData) {
     this._points = points.slice();
     this._sourcedPoints = points.slice();
+    this._offerData = offerData;
+    this._destinationData = destinationData;
 
     this._renderInfo();
   }
@@ -69,7 +71,7 @@ export default class Trip {
 
   _renderPoint(point) {
     const pointPresenter = new PointPresenter(this._listComponent, this._handlePointChange, this._handleModeChange);
-    pointPresenter.init(point);
+    pointPresenter.init(point, this._offerData, this._destinationData);
     this._pointPresenter.set(point.id, pointPresenter);
   }
 

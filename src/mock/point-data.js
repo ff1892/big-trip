@@ -1,10 +1,9 @@
 import dayjs from 'dayjs';
-import {getRandomInteger, getRandomArrayValue, generateOrNot} from '../utils/common.js';
+import {getRandomInteger, getRandomArrayValue} from '../utils/common.js';
 import {sortPointsByDayUp} from '../utils/sort-filter.js';
-import {generateDestination} from './point-destination.js';
-import {EVENT_TYPES, getChoosenOffers} from './point-offer.js';
+import {DESTINATIONS, destinationData} from './point-destination.js';
+import {EVENT_TYPES, offerData, getChoosenOffers} from './point-offer.js';
 
-const DESTINATIONS = ['Rome', 'Naples', 'Venice', 'Turin', 'Palermo', 'Florenze'];
 const MIN_PRICE = 1;
 const MAX_PRICE = 200;
 const DAYS_GAP = 2;
@@ -15,6 +14,11 @@ const EVENT_DEFAULT = 'flight';
 
 const getDestinationName = () => getRandomArrayValue(DESTINATIONS);
 const getEventType = () => getRandomArrayValue(EVENT_TYPES);
+
+const getDestinationForCity = (dataList, city) => {
+  const currentDestination = dataList.find((destination) => destination.name === city);
+  return currentDestination ? currentDestination : '';
+};
 
 const generateDate = () => {
   let dateMin;
@@ -53,13 +57,12 @@ const generatePoint = (id) => {
   const point = {
     id,
     type,
-    name: destinationName,
     price: getRandomInteger(MIN_PRICE, MAX_PRICE),
     dateFrom: date.min,
     dateTo: date.max,
     isFavorite: Boolean(getRandomInteger()),
-    offers: getChoosenOffers(type),
-    destination: generateOrNot(generateDestination, destinationName),
+    offers: getChoosenOffers(type, offerData),
+    destination: getDestinationForCity(destinationData, destinationName),
   };
   return point;
 };

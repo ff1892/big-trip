@@ -25,14 +25,14 @@ export default class Point {
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
   }
 
-  init(point) {
+  init(point, offerData, destinationData) {
     this._point = point;
 
     const prevPointComponent = this._pointComponent;
     const prevPointEditComponent = this._pointEditComponent;
 
     this._pointComponent = new PointView(point);
-    this._pointEditComponent = new PointEditView(point);
+    this._pointEditComponent = new PointEditView(point, offerData, destinationData);
 
     this._pointComponent.setEditClickHandler(this._handlePointEditClick);
     this._pointComponent.setFavoriteClickHandler(this._handleFavoriteClick);
@@ -83,6 +83,7 @@ export default class Point {
   _escKeyDownHandler(evt) {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
+      this._pointEditComponent.reset(this._point);
       this._replaceFormToPoint();
     }
   }
@@ -92,6 +93,7 @@ export default class Point {
   }
 
   _handleFormEditClick() {
+    this._pointEditComponent.reset(this._point);
     this._replaceFormToPoint();
   }
 
