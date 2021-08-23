@@ -125,6 +125,8 @@ export default class Point extends AbstractComponentView {
       data.offers = [];
     }
 
+    delete data.hasOffers;
+
     return data;
   }
 }

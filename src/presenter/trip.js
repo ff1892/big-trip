@@ -57,7 +57,7 @@ export default class Trip {
   _handlePointChange(updatedPoint) {
     this._points = updateItem(this._points, updatedPoint);
     this._sourcedPoints = updateItem(this._sourcedPoints, updatedPoint);
-    this._pointPresenter.get(updatedPoint.id).init(updatedPoint);
+    this._pointPresenter.get(updatedPoint.id).init(updatedPoint, this._offerData, this._destinationData);
   }
 
   _handleModeChange() {
