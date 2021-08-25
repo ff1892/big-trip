@@ -102,10 +102,11 @@ const createTypeListTemplate = (pointTypes, id, type) => (
 const createPointEditTemplate = (point, offerData, destinationData) => {
   const {type, dateFrom, dateTo, price, offers, destination, id} = point;
   const {name} = destination;
+  const destinationNames = destinationData.map((destination) => destination.name);
 
   const offersListTemplate = createOffersListTemplate(type, id, offers, offerData);
   const destinationTemplate = createDestinationTemplate(name, destinationData);
-  const destinationListTemplate = createDestinationListTemplate(DESTINATIONS, id);
+  const destinationListTemplate = createDestinationListTemplate(destinationNames, id);
   const typeListTemplate = createTypeListTemplate(POINT_TYPES, id, type);
 
   return `<li class="trip-events__item">
@@ -232,7 +233,7 @@ export default class PointEdit extends SmartView {
 
   _submitHandler(evt) {
     evt.preventDefault();
-    this._callback.submit();
+    this._callback.submit(PointEdit.parseDataToPoint(this._data));
   }
 
   setSubmitHandler(callback) {
