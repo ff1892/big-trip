@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
 import SmartView from './smart.js';
 import {getNumeralDate} from '../utils/time.js';
 import {getLastWordFromString} from '../utils/components.js';
-import {DESTINATIONS, pointDefault} from '../mock/point-data.js';
+import {pointDefault} from '../mock/point-data.js';
 import {POINT_TYPES} from '../const.js';
 
 const DatepickerSettings = {
@@ -102,7 +102,7 @@ const createTypeListTemplate = (pointTypes, id, type) => (
 const createPointEditTemplate = (point, offerData, destinationData) => {
   const {type, dateFrom, dateTo, price, offers, destination, id} = point;
   const {name} = destination;
-  const destinationNames = destinationData.map((destination) => destination.name);
+  const destinationNames = destinationData.map((destinationItem) => destinationItem.name);
 
   const offersListTemplate = createOffersListTemplate(type, id, offers, offerData);
   const destinationTemplate = createDestinationTemplate(name, destinationData);

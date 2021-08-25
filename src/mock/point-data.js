@@ -6,8 +6,8 @@ import {EVENT_TYPES, offerData, getChoosenOffers} from './point-offer.js';
 
 const MIN_PRICE = 1;
 const MAX_PRICE = 200;
-const DAYS_GAP = 2;
-const HOURS_GAP = 5;
+const DAYS_GAP = 7;
+const HOURS_GAP = 8;
 const MINUTES_GAP = 50;
 const POINTS_COUNT = 10;
 const EVENT_DEFAULT = 'flight';
@@ -70,7 +70,7 @@ const generatePoint = (id) => {
 const generateData = (pointsCount) => new Array(pointsCount).fill().map((value, index) => generatePoint(index + 1));
 
 const points = generateData(POINTS_COUNT);
-const pointsByDate = points.sort(sortPointsByDayUp);
+const pointsByDate = points.slice().sort(sortPointsByDayUp);
 
 const endTime = pointsByDate[pointsByDate.length - 1].dateTo;
 
@@ -93,5 +93,6 @@ const pointDefault = getPointDefault();
 export {
   DESTINATIONS,
   pointsByDate,
+  points,
   pointDefault
 };
