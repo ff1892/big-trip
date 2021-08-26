@@ -1,12 +1,12 @@
 import {remove, render, RenderPosition} from '../utils/render.js';
-import {MessagesPointsAbsent} from '../utils/components.js';
+import {MessagesNoPoints} from '../utils/components.js';
 import {sortPointsByTimeDown, sortPointsByPriceDown, sortPointsByDayUp} from '../utils/sort-filter.js';
 import {SortingType, UserAction, UpdateType} from '../const.js';
 
 
 import SortingView from '../view/sorting.js';
 import ListView from '../view/list.js';
-import PointsAbsentView from '../view/points-absent.js';
+import NoPointsView from '../view/points-absent.js';
 
 import PointPresenter from './point.js';
 
@@ -15,9 +15,11 @@ export default class Trip {
     this._tripEventsSection = container.querySelector('.trip-events');
     this._pointsModel = pointsModel;
 
-    this._sortingComponent = new SortingView();
-    this._listComponent = new ListView();
-    this._pointsAbsentEverything = new PointsAbsentView(MessagesPointsAbsent.EVERYTHING);
+    this._currentSortingType = SortingType.DEFAULT;
+
+    this._sortingComponent = null;
+    this._listComponent = null;
+    this._noPointsComponent = null;
 
     this._handleSortingTypeChange = this._handleSortingTypeChange.bind(this);
     this._handleViewAction = this._handleViewAction.bind(this);
@@ -32,7 +34,7 @@ export default class Trip {
     this._offerData = offerData;
     this._destinationData = destinationData;
 
-    this._renderInfo();
+    this._renderBoard();
   }
 
   _getPoints() {
@@ -44,12 +46,6 @@ export default class Trip {
       default:
         return this._pointsModel.getPoints().slice().sort(sortPointsByDayUp);
     }
-  }
-
-  _handleSortingTypeChange(sortingType) {
-    this._currentSortingType = sortingType;
-    this._clearPoints();
-    this._renderPoints();
   }
 
   _handleViewAction(actionType, updateType, update) {
@@ -64,7 +60,6 @@ export default class Trip {
         this._pointsModel.deletePoint(updateType, update);
         break;
     }
-
   }
 
   _handleModelEvent(updateType, data) {
@@ -73,12 +68,40 @@ export default class Trip {
         this._pointPresenter.get(data.id).init(data, this._offerData, this._destinationData);
         break;
       case UpdateType.MINOR:
-        // -----
+        this._clearBoard();
+        this._renderBoard();
         break;
       case UpdateType.MAJOR:
-        // -----
+        this._clearBoard();
+        this._renderBoard();
         break;
     }
+  }
+
+  _renderBoard() {
+    if (!this._getPoints().length) {
+      this._renderNoPoints();
+      return;
+    }
+
+    this._renderSorting();
+    this._renderPoints();
+  }
+
+  _clearBoard({resetSortingType = false} = {}) {
+    this._clearPoints();
+    remove(this._sortingComponent);
+    remove(this._noPointsComponent);
+
+    if (resetSortingType) {
+      this._currentSortingType = SortingType.DEFAULT;
+    }
+  }
+
+  _handleSortingTypeChange(sortingType) {
+    this._currentSortingType = sortingType;
+    this._clearPoints();
+    this._renderPoints();
   }
 
   _handleModeChange() {
@@ -86,8 +109,13 @@ export default class Trip {
   }
 
   _renderSorting() {
-    render(this._tripEventsSection, this._sortingComponent, RenderPosition.BEFOREEND);
+    if (this._sortingComponent !== null) {
+      this._sortingComponent = null;
+    }
+
+    this._sortingComponent = new SortingView(this._currentSortingType);
     this._sortingComponent.setSortingTypeChangeHandler(this._handleSortingTypeChange);
+    render(this._tripEventsSection, this._sortingComponent, RenderPosition.BEFOREEND);
   }
 
   _renderPoint(point) {
@@ -97,6 +125,10 @@ export default class Trip {
   }
 
   _renderPoints() {
+    if (this._listComponent !== null) {
+      this._listComponent = null;
+    }
+    this._listComponent = new ListView();
     render(this._tripEventsSection, this._listComponent, RenderPosition.BEFOREEND);
     this._getPoints().forEach((point) => this._renderPoint(point));
   }
@@ -107,17 +139,11 @@ export default class Trip {
     remove(this._listComponent);
   }
 
-  _renderPointsAbsentEvery() {
-    render(this._tripEventsSection, this._pointsAbsentEverything, RenderPosition.BEFOREEND);
-  }
-
-  _renderInfo() {
-    if (!this._getPoints().length) {
-      this._renderPointsAbsentEvery();
-      return;
+  _renderNoPoints() {
+    if (this._noPointsComponent !== null) {
+      this._noPointsComponent = null;
     }
-
-    this._renderSorting();
-    this._renderPoints();
+    this._noPointsComponent = new NoPointsView(MessagesNoPoints.EVERYTHING);
+    render(this._tripEventsSection, this._noPointsComponent, RenderPosition.BEFOREEND);
   }
 }

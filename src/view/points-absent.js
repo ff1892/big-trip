@@ -4,7 +4,7 @@ const createPointsEmptyTemplate = (message) => (
   `<p class="trip-events__msg">${message}</p>`
 );
 
-export default class PointsAbsent extends AbstractComponentView {
+export default class NoPoints extends AbstractComponentView {
   constructor(message) {
     super();
     this._message = message;

@@ -178,9 +178,11 @@ export default class PointEdit extends SmartView {
 
     this._editClickHandler = this._editClickHandler.bind(this);
     this._submitHandler = this._submitHandler.bind(this);
+    this._deleteHandler = this._deleteHandler.bind(this);
     this._typeChangeHandler = this._typeChangeHandler.bind(this);
     this._nameChangeHandler = this._nameChangeHandler.bind(this);
     this._priceChangeHandler = this._priceChangeHandler.bind(this);
+    this._offersChangeHandler = this._offersChangeHandler.bind(this);
     this._dateStartChangeHandler = this._dateStartChangeHandler.bind(this);
     this._dateEndChangeHandler = this._dateEndChangeHandler.bind(this);
 
@@ -221,6 +223,14 @@ export default class PointEdit extends SmartView {
     }, true);
   }
 
+  _offersChangeHandler(evt) {
+    // const checkedOffers = this._offerData.find((offerItems) => offerItems.type === this._data.type)
+    evt.preventDefault();
+    this.updateData({
+      offers: checkedOffers,
+    });
+  }
+
   _editClickHandler(evt) {
     evt.preventDefault();
     this._callback.editClick();
@@ -236,9 +246,19 @@ export default class PointEdit extends SmartView {
     this._callback.submit(PointEdit.parseDataToPoint(this._data));
   }
 
+  _deleteHandler(evt) {
+    evt.preventDefault();
+    this._callback.delete(PointEdit.parseDataToPoint(this._data));
+  }
+
   setSubmitHandler(callback) {
     this._callback.submit = callback;
     this.getElement().querySelector('.event--edit').addEventListener('submit', this._submitHandler);
+  }
+
+  setDeleteHandler(callback) {
+    this._callback.delete = callback;
+    this.getElement().querySelector('.event--edit').addEventListener('reset', this._deleteHandler);
   }
 
   _setDatePickerStart() {
