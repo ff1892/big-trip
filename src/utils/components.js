@@ -9,9 +9,9 @@ export const MessagesPointsAbsent = {
 export const getLastWordFromString = (string)=> string.split(' ').slice(-1);
 
 export const createDestinationsTemplate = (points) => {
-  const firstDestination = points[0].name;
-  const lastDestination = points[points.length - 1].name;
-  const uniquePoints = [...new Set(points.map((point) => point.name))];
+  const firstDestination = points[0].destination.name;
+  const lastDestination = points[points.length - 1].destination.name;
+  const uniquePoints = [...new Set(points.map((point) => point.destination.name))];
 
   if (uniquePoints.length === 2 && lastDestination === firstDestination) {
     uniquePoints.push(lastDestination);

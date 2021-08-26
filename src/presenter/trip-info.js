@@ -26,6 +26,7 @@ export default class TripInfo {
 
   _renderRoute() {
     render(this._tripInfoComponent, new RouteView(this._points), RenderPosition.BEFOREEND);
+    console.log(this._points);
   }
 
   _renderTotalCost() {

@@ -5,7 +5,6 @@ import PointsModel from './model/points.js';
 import TripInfoPresenter from './presenter/trip-info.js';
 import TripPresenter from './presenter/trip.js';
 
-
 const pageBody = document.querySelector('.page-body');
 
 const pointsModel = new PointsModel();
