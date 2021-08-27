@@ -4,7 +4,6 @@ import TripInfoView from '../view/trip-info.js';
 import TotalCostView from '../view/total-cost.js';
 import RouteView from '../view/route.js';
 import MenuView from '../view/menu.js';
-import FilterView from '../view/filters.js';
 
 
 export default class TripInfo {
@@ -20,7 +19,6 @@ export default class TripInfo {
   init(points) {
     this._points = points.slice();
     render(this._tripMenu, new MenuView(), RenderPosition.BEFOREEND);
-    render(this._tripFilters, new FilterView(), RenderPosition.BEFOREEND);
     this._renderTripInfo();
   }
 

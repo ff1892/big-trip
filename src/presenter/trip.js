@@ -1,5 +1,6 @@
 import {remove, render, RenderPosition} from '../utils/render.js';
 import {MessagesNoPoints} from '../utils/components.js';
+import {filter} from '../utils/sort-filter.js';
 import {sortPointsByTimeDown, sortPointsByPriceDown, sortPointsByDayUp} from '../utils/sort-filter.js';
 import {SortingType, UserAction, UpdateType} from '../const.js';
 
@@ -11,9 +12,10 @@ import NoPointsView from '../view/points-absent.js';
 import PointPresenter from './point.js';
 
 export default class Trip {
-  constructor(container, pointsModel) {
+  constructor(container, pointsModel, filterModel) {
     this._tripEventsSection = container.querySelector('.trip-events');
     this._pointsModel = pointsModel;
+    this._filterModel = filterModel;
 
     this._currentSortingType = SortingType.DEFAULT;
 
@@ -27,6 +29,7 @@ export default class Trip {
     this._handleModeChange = this._handleModeChange.bind(this);
 
     this._pointsModel.addObserver(this._handleModelEvent);
+    this._filterModel.addObserver(this._handleModelEvent);
     this._pointPresenter = new Map();
   }
 
@@ -38,13 +41,17 @@ export default class Trip {
   }
 
   _getPoints() {
+    const filterType = this._filterModel.getFilter();
+    const points = this._pointsModel.getPoints();
+    const filteredPoints = filter[filterType](points);
+
     switch(this._currentSortingType) {
       case SortingType.TIME:
-        return this._pointsModel.getPoints().slice().sort(sortPointsByTimeDown);
+        return filteredPoints.sort(sortPointsByTimeDown);
       case SortingType.PRICE:
-        return this._pointsModel.getPoints().slice().sort(sortPointsByPriceDown);
+        return filteredPoints.sort(sortPointsByPriceDown);
       default:
-        return this._pointsModel.getPoints().slice().sort(sortPointsByDayUp);
+        return filteredPoints.sort(sortPointsByDayUp);
     }
   }
 
@@ -72,7 +79,7 @@ export default class Trip {
         this._renderBoard();
         break;
       case UpdateType.MAJOR:
-        this._clearBoard();
+        this._clearBoard({resetSortingType: true});
         this._renderBoard();
         break;
     }
@@ -143,7 +150,7 @@ export default class Trip {
     if (this._noPointsComponent !== null) {
       this._noPointsComponent = null;
     }
-    this._noPointsComponent = new NoPointsView(MessagesNoPoints.EVERYTHING);
+    this._noPointsComponent = new NoPointsView(MessagesNoPoints[this._filterModel.getFilter()]);
     render(this._tripEventsSection, this._noPointsComponent, RenderPosition.BEFOREEND);
   }
 }

@@ -17,7 +17,7 @@ export default class Points extends AbstractObserver {
   updatePoint(updateType, update) {
     const index = this._points.findIndex((point) => point.id === update.id);
 
-    if (index === 1) {
+    if (index === -1) {
       throw new Error('Can\'t update unexisting point');
     }
 

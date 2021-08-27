@@ -1,9 +1,9 @@
 const POINTS_TO_SHOW = 3;
 
 export const MessagesNoPoints = {
-  EVERYTHING: 'Click New Event to create your first point',
-  PAST:'There are no past events now',
-  FUTURE: 'There are no future events now',
+  ['everything']: 'Click New Event to create your first point',
+  ['past']:'There are no past events now',
+  ['future']: 'There are no future events now',
 };
 
 export const getLastWordFromString = (string)=> string.split(' ').slice(-1);

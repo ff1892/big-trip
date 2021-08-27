@@ -331,6 +331,20 @@ export default class PointEdit extends SmartView {
     }
   }
 
+  removeElement() {
+    super.removeElement();
+
+    if (this._datepickerStart) {
+      this._datepickerStart.destroy();
+      this._datepickerStart = null;
+    }
+
+    if (this._datepickerEnd) {
+      this._datepickerEnd.destroy();
+      this._datepickerEnd = null;
+    }
+  }
+
   _setInnerHandlers() {
     this.getElement()
       .querySelector('.event__input--destination')

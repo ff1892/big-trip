@@ -9,7 +9,7 @@ const MAX_PRICE = 200;
 const DAYS_GAP = 7;
 const HOURS_GAP = 8;
 const MINUTES_GAP = 50;
-const POINTS_COUNT = 3;
+const POINTS_COUNT = 10;
 const EVENT_DEFAULT = 'flight';
 
 const getDestinationName = () => getRandomArrayValue(DESTINATIONS);
