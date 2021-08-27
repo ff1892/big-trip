@@ -1,4 +1,4 @@
-import { UpdateType } from '../const.js';
+import {UpdateType} from '../const.js';
 import {render, replace, remove, RenderPosition} from '../utils/render.js';
 import FilterView from '../view/filters.js';
 

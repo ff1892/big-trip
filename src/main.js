@@ -22,6 +22,11 @@ const initApp = () => {
   tripInfo.init(pointsByDate);
   filter.init();
   trip.init(offerData, destinationData);
+
+  document.querySelector('.trip-main__event-add-btn').addEventListener('click', (evt) => {
+    evt.preventDefault();
+    trip.createPoint();
+  });
 };
 
 initApp();

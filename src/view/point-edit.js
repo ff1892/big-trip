@@ -5,7 +5,6 @@ import dayjs from 'dayjs';
 import SmartView from './smart.js';
 import {getNumeralDate} from '../utils/time.js';
 import {getLastWordFromString} from '../utils/components.js';
-import {pointDefault} from '../mock/point-data.js';
 import {POINT_TYPES} from '../const.js';
 
 const DatepickerSettings = {
@@ -101,11 +100,12 @@ const createTypeListTemplate = (pointTypes, id, type) => (
 
 const createPointEditTemplate = (point, offerData, destinationData) => {
   const {type, dateFrom, dateTo, price, offers, destination, id} = point;
-  const {name} = destination;
   const destinationNames = destinationData.map((destinationItem) => destinationItem.name);
 
   const offersListTemplate = createOffersListTemplate(type, id, offers, offerData);
-  const destinationTemplate = createDestinationTemplate(name, destinationData);
+  const destinationTemplate = destination
+    ? createDestinationTemplate(destination.name, destinationData)
+    : '';
   const destinationListTemplate = createDestinationListTemplate(destinationNames, id);
   const typeListTemplate = createTypeListTemplate(POINT_TYPES, id, type);
 
@@ -131,7 +131,7 @@ const createPointEditTemplate = (point, offerData, destinationData) => {
           <label class="event__label  event__type-output" for="event-destination-${id}">
             ${type}
           </label>
-          <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${name}" list="destination-list-${id}">
+          <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${destination ? destination.name : ''}" list="destination-list-${id}">
           ${destinationListTemplate}
         </div>
 
@@ -168,7 +168,7 @@ const createPointEditTemplate = (point, offerData, destinationData) => {
 };
 
 export default class PointEdit extends SmartView {
-  constructor(point = pointDefault, offerData, destinationData) {
+  constructor(point, offerData, destinationData) {
     super();
     this._data = PointEdit.parsePointToData(point);
     this._offerData = offerData;
