@@ -20,7 +20,7 @@ const createOfferTemplate = (id, offer, offers) => (
   id="event-offer-${getLastWordFromString(offer.title)}-${id}"
   type="checkbox"
   name="event-offer-${getLastWordFromString(offer.title)}"
-  ${offers.includes(offer) ? 'checked' : ''}>
+  ${offers.includes(offer) ? 'checked' : ''} data-id="${offer.title}">
 
   <label class="event__offer-label"
   for="event-offer-${getLastWordFromString(offer.title)}-${id}">
@@ -178,7 +178,7 @@ export default class PointEdit extends SmartView {
 
     this._editClickHandler = this._editClickHandler.bind(this);
     this._submitHandler = this._submitHandler.bind(this);
-    this._deleteHandler = this._deleteHandler.bind(this);
+    this._deleteClickHandler = this._deleteClickHandler.bind(this);
     this._typeChangeHandler = this._typeChangeHandler.bind(this);
     this._nameChangeHandler = this._nameChangeHandler.bind(this);
     this._priceChangeHandler = this._priceChangeHandler.bind(this);
@@ -224,11 +224,12 @@ export default class PointEdit extends SmartView {
   }
 
   _offersChangeHandler(evt) {
-    // const checkedOffers = this._offerData.find((offerItems) => offerItems.type === this._data.type)
-    evt.preventDefault();
+    const checkedInputs = evt.currentTarget.querySelectorAll('.event__offer-checkbox:checked');
+    const avaliableOffers = this._offerData.find((offerItems) => offerItems.type === this._data.type).offers;
+    const selectedOffers = [...checkedInputs].map((input) => avaliableOffers.find((offer) => offer.title === input.dataset.id));
     this.updateData({
-      offers: checkedOffers,
-    });
+      offers: selectedOffers,
+    }, true);
   }
 
   _editClickHandler(evt) {
@@ -246,7 +247,7 @@ export default class PointEdit extends SmartView {
     this._callback.submit(PointEdit.parseDataToPoint(this._data));
   }
 
-  _deleteHandler(evt) {
+  _deleteClickHandler(evt) {
     evt.preventDefault();
     this._callback.delete(PointEdit.parseDataToPoint(this._data));
   }
@@ -256,9 +257,9 @@ export default class PointEdit extends SmartView {
     this.getElement().querySelector('.event--edit').addEventListener('submit', this._submitHandler);
   }
 
-  setDeleteHandler(callback) {
+  setDeleteClickHandler(callback) {
     this._callback.delete = callback;
-    this.getElement().querySelector('.event--edit').addEventListener('reset', this._deleteHandler);
+    this.getElement().querySelector('.event--edit').addEventListener('reset', this._deleteClickHandler);
   }
 
   _setDatePickerStart() {
@@ -340,6 +341,12 @@ export default class PointEdit extends SmartView {
     this.getElement()
       .querySelector('.event__input--price')
       .addEventListener('change', this._priceChangeHandler);
+
+    if (this.getElement().querySelector('.event__available-offers')) {
+      this.getElement()
+        .querySelector('.event__available-offers')
+        .addEventListener('change', this._offersChangeHandler);
+    }
   }
 
   restoreHandlers() {
@@ -347,6 +354,7 @@ export default class PointEdit extends SmartView {
     this._setDatePickerStart();
     this._setDatePickerEnd();
     this.setEditClickHandler(this._callback.editClick);
+    this.setDeleteClickHandler(this._callback.delete);
     this.setSubmitHandler(this._callback.submit);
   }
 
