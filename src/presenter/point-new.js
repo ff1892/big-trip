@@ -1,6 +1,6 @@
 import PointEditView from '../view/point-edit.js';
 import {remove, render, RenderPosition} from '../utils/render.js';
-import {UserAction, UpdateType} from '../const.js'
+import {UserAction, UpdateType} from '../const.js';
 
 export default class PointNew {
   constructor(listContainer, changeData) {
@@ -48,7 +48,7 @@ export default class PointNew {
       UserAction.ADD_POINT,
       UpdateType.MINOR,
       Object.assign({id: this._id}, point),
-    )
+    );
     this.destroy();
   }
 

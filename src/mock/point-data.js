@@ -9,7 +9,7 @@ const MAX_PRICE = 200;
 const DAYS_GAP = 7;
 const HOURS_GAP = 8;
 const MINUTES_GAP = 50;
-const POINTS_COUNT = 10;
+const POINTS_COUNT = 5;
 
 const getDestinationName = () => getRandomArrayValue(DESTINATIONS);
 const getEventType = () => getRandomArrayValue(EVENT_TYPES);
@@ -74,5 +74,5 @@ const pointsByDate = points.slice().sort(sortPointsByDayUp);
 export {
   DESTINATIONS,
   pointsByDate,
-  points,
+  points
 };

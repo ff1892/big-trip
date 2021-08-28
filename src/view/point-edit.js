@@ -6,6 +6,7 @@ import SmartView from './smart.js';
 import {getNumeralDate} from '../utils/time.js';
 import {getLastWordFromString} from '../utils/components.js';
 import {POINT_TYPES} from '../const.js';
+import {DESTINATIONS} from '../mock/point-destination.js';
 
 const DatepickerSettings = {
   enableTime: true,
@@ -151,7 +152,7 @@ const createPointEditTemplate = (point, offerData, destinationData) => {
           <input class="event__input  event__input--price" id="event-price-${id}" type="text" name="event-price" value="${price}">
         </div>
 
-        <button class="event__save-btn  btn  btn--blue" type="submit">
+        <button class="event__save-btn  btn  btn--blue" type="submit" ${!destination ? 'disabled' : ''}>
           Save
         </button>
         <button class="event__reset-btn" type="reset">Delete</button>
@@ -209,6 +210,11 @@ export default class PointEdit extends SmartView {
   }
 
   _nameChangeHandler(evt) {
+    if (!(evt.target.value.includes(DESTINATIONS))) {
+      this.getElement()
+        .querySelector('.event__save-btn')
+        .disabled = true;
+    }
     this.updateData({
       destination: {
         name: evt.target.value,
@@ -217,9 +223,14 @@ export default class PointEdit extends SmartView {
   }
 
   _priceChangeHandler(evt) {
+    if (!(Number.isInteger(evt.target.value))) {
+      this.getElement()
+        .querySelector('.event__save-btn')
+        .disabled = true;
+    }
     evt.preventDefault();
     this.updateData({
-      price: evt.target.value,
+      price: Number.parseInt(evt.target.value, 10),
     }, true);
   }
 

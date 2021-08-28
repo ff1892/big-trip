@@ -4,13 +4,13 @@ const EVENT_DEFAULT = 'flight';
 
 export const POINT_BLANK =  {
   type: EVENT_DEFAULT,
-  price: '',
+  price: 0,
   dateFrom: dayjs().toDate(),
   dateTo: dayjs().toDate(),
   isFavorite: false,
   offers: [],
   destination: null,
-}
+};
 
 export const SortingType = {
   DEFAULT: 'default',
