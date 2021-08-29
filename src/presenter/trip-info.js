@@ -1,7 +1,6 @@
 import {render, replace, remove, RenderPosition} from '../utils/render.js';
 
 import TripInfoView from '../view/trip-info.js';
-import MenuView from '../view/menu.js';
 import {UpdateType} from '../const.js';
 import {sortPointsByDayUp} from '../utils/sort-filter.js';
 
@@ -9,7 +8,6 @@ import {sortPointsByDayUp} from '../utils/sort-filter.js';
 export default class TripInfo {
   constructor(container, pointsModel) {
     this._mainTrip = container.querySelector('.trip-main');
-    this._tripMenu = this._mainTrip.querySelector('.trip-controls__navigation');
     this._tripInfoComponent = null;
 
     this._pointsModel = pointsModel;
@@ -18,11 +16,6 @@ export default class TripInfo {
   }
 
   init() {
-    render(this._tripMenu, new MenuView(), RenderPosition.BEFOREEND);
-    this._renderTripInfo();
-  }
-
-  _renderTripInfo() {
     this._points = this._pointsModel.getPoints();
     this._sortedPoints = this._points.slice().sort(sortPointsByDayUp);
 

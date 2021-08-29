@@ -1,3 +1,4 @@
+import he from 'he';
 import flatpickr from 'flatpickr';
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 import dayjs from 'dayjs';
@@ -135,7 +136,7 @@ const createPointEditTemplate = (point, offerData, destinationData, isNew) => {
           <input class="event__input  event__input--destination"
             id="event-destination-${id}"
             type="text" name="event-destination"
-            value="${destination ? destination.name : ''}"
+            value="${destination ? (he.encode(destination.name)) : ''}"
             list="destination-list-${id}">
           ${destinationListTemplate}
         </div>
