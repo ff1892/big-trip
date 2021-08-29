@@ -20,7 +20,7 @@ export default class PointNew {
       return;
     }
 
-    this._pointEditComponent = new PointEditView(point, offerData, destinationData);
+    this._pointEditComponent = new PointEditView(point, offerData, destinationData, true);
     this._pointEditComponent.setSubmitHandler(this._handleFormSubmit);
     this._pointEditComponent.setDeleteClickHandler(this._handleCloseClick);
     this._buttonNewPoint.disabled = true;

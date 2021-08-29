@@ -99,7 +99,7 @@ const createTypeListTemplate = (pointTypes, id, type) => (
   pointTypes.map((pointType) => createTypeTemplate(pointType, id, type)).join('')
 );
 
-const createPointEditTemplate = (point, offerData, destinationData) => {
+const createPointEditTemplate = (point, offerData, destinationData, isNew) => {
   const {type, dateFrom, dateTo, price, offers, destination, id} = point;
   const destinationNames = destinationData.map((destinationItem) => destinationItem.name);
 
@@ -132,7 +132,11 @@ const createPointEditTemplate = (point, offerData, destinationData) => {
           <label class="event__label  event__type-output" for="event-destination-${id}">
             ${type}
           </label>
-          <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${destination ? destination.name : ''}" list="destination-list-${id}">
+          <input class="event__input  event__input--destination"
+            id="event-destination-${id}"
+            type="text" name="event-destination"
+            value="${destination ? destination.name : ''}"
+            list="destination-list-${id}">
           ${destinationListTemplate}
         </div>
 
@@ -151,14 +155,18 @@ const createPointEditTemplate = (point, offerData, destinationData) => {
           </label>
           <input class="event__input  event__input--price" id="event-price-${id}" type="text" name="event-price" value="${price}">
         </div>
-
         <button class="event__save-btn  btn  btn--blue" type="submit" ${!destination ? 'disabled' : ''}>
           Save
         </button>
-        <button class="event__reset-btn" type="reset">Delete</button>
-        <button class="event__rollup-btn" type="button">
-          <span class="visually-hidden">Open event</span>
+        <button class="event__reset-btn" type="reset">
+          ${isNew ? 'Cancel' : 'Delete'}
         </button>
+
+        ${!isNew ? `<button class="event__rollup-btn" type="button">
+          <span class="visually-hidden">Open event</span>
+          </button>` : ''}
+
+
       </header>
       <section class="event__details">
         ${offersListTemplate}
@@ -169,11 +177,12 @@ const createPointEditTemplate = (point, offerData, destinationData) => {
 };
 
 export default class PointEdit extends SmartView {
-  constructor(point, offerData, destinationData) {
+  constructor(point, offerData, destinationData, isNew = false) {
     super();
     this._data = PointEdit.parsePointToData(point);
     this._offerData = offerData;
     this._destinationData = destinationData;
+    this._isNew = isNew;
     this._datepickerStart = null;
     this._datepickerEnd = null;
 
@@ -193,7 +202,7 @@ export default class PointEdit extends SmartView {
   }
 
   getTemplate() {
-    return createPointEditTemplate(this._data, this._offerData, this._destinationData);
+    return createPointEditTemplate(this._data, this._offerData, this._destinationData, this._isNew);
   }
 
   reset(point) {
@@ -210,28 +219,32 @@ export default class PointEdit extends SmartView {
   }
 
   _nameChangeHandler(evt) {
-    if (!(evt.target.value.includes(DESTINATIONS))) {
-      this.getElement()
-        .querySelector('.event__save-btn')
-        .disabled = true;
+    if (DESTINATIONS.includes(evt.target.value)) {
+      this.updateData({
+        destination: {
+          name: evt.target.value,
+        },
+      });
+      return;
     }
-    this.updateData({
-      destination: {
-        name: evt.target.value,
-      },
-    });
+    this.getElement()
+      .querySelector('.event__save-btn')
+      .disabled = true;
   }
 
   _priceChangeHandler(evt) {
-    if (!(Number.isInteger(evt.target.value))) {
-      this.getElement()
-        .querySelector('.event__save-btn')
-        .disabled = true;
+    const inputValue = parseInt(evt.target.value, 10);
+    const saveButton = this.getElement().querySelector('.event__save-btn');
+
+    if (inputValue) {
+      saveButton.disabled = false;
+      this.updateData({
+        price: inputValue,
+      }, true);
+      return;
     }
-    evt.preventDefault();
-    this.updateData({
-      price: Number.parseInt(evt.target.value, 10),
-    }, true);
+
+    saveButton.disabled = true;
   }
 
   _offersChangeHandler(evt) {
@@ -258,14 +271,14 @@ export default class PointEdit extends SmartView {
     this._callback.submit(PointEdit.parseDataToPoint(this._data));
   }
 
-  _deleteClickHandler(evt) {
-    evt.preventDefault();
-    this._callback.delete(PointEdit.parseDataToPoint(this._data));
-  }
-
   setSubmitHandler(callback) {
     this._callback.submit = callback;
     this.getElement().querySelector('.event--edit').addEventListener('submit', this._submitHandler);
+  }
+
+  _deleteClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.delete(PointEdit.parseDataToPoint(this._data));
   }
 
   setDeleteClickHandler(callback) {
@@ -333,13 +346,6 @@ export default class PointEdit extends SmartView {
     this.updateData({
       dateTo: userDate,
     });
-
-    if (dayjs(this._data.dateFrom)
-      .diff(dayjs(this._data.dateTo)) === 0)
-    {
-      this.getElement().querySelector('.event__save-btn')
-        .setAttribute('disabled', 'disabled');
-    }
   }
 
   removeElement() {
@@ -378,9 +384,11 @@ export default class PointEdit extends SmartView {
     this._setInnerHandlers();
     this._setDatePickerStart();
     this._setDatePickerEnd();
-    this.setEditClickHandler(this._callback.editClick);
     this.setDeleteClickHandler(this._callback.delete);
     this.setSubmitHandler(this._callback.submit);
+    if (!this._isNew) {
+      this.setEditClickHandler(this._callback.editClick);
+    }
   }
 
   static parsePointToData(point) {
