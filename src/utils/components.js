@@ -1,17 +1,19 @@
+import {FilterType} from '../const.js';
+
 const POINTS_TO_SHOW = 3;
 
-export const MessagesPointsAbsent = {
-  EVERYTHING: 'Click New Event to create your first point',
-  PAST:'There are no past events now',
-  FUTURE: 'There are no future events now',
+export const MessagesNoPoints = {
+  [FilterType.EVERYTHING]: 'Click New Event to create your first point',
+  [FilterType.PAST]:'There are no past events now',
+  [FilterType.FUTURE]: 'There are no future events now',
 };
 
 export const getLastWordFromString = (string)=> string.split(' ').slice(-1);
 
 export const createDestinationsTemplate = (points) => {
-  const firstDestination = points[0].name;
-  const lastDestination = points[points.length - 1].name;
-  const uniquePoints = [...new Set(points.map((point) => point.name))];
+  const firstDestination = points[0].destination.name;
+  const lastDestination = points[points.length - 1].destination.name;
+  const uniquePoints = [...new Set(points.map((point) => point.destination.name))];
 
   if (uniquePoints.length === 2 && lastDestination === firstDestination) {
     uniquePoints.push(lastDestination);

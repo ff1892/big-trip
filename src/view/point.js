@@ -1,3 +1,4 @@
+import he from 'he';
 import AbstractComponentView from './abstract-component.js';
 import {getHumanizedDuration, getTimefromDate, getDateAttribute, getDateTimeAttribute, getHumanizedDate} from '../utils/time.js';
 
@@ -39,7 +40,7 @@ const createPointTemplate = (point) => {
           src="img/icons/${type}.png"
           alt="${type[0].toUpperCase() + type.slice(1)} icon">
       </div>
-      <h3 class="event__title">${type} ${name}</h3>
+      <h3 class="event__title">${type} ${he.encode(name)}</h3>
       <div class="event__schedule">
         <p class="event__time">
           <time class="event__start-time"
