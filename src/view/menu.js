@@ -1,4 +1,4 @@
-import AbstractComponentView from './abstract-component.js';
+import SmartView from './smart.js';
 import {MenuItem} from '../const.js';
 
 const createMenuTemplate = (currentMenuItem) => (
@@ -18,7 +18,7 @@ const createMenuTemplate = (currentMenuItem) => (
   </nav>`
 );
 
-export default class Menu extends AbstractComponentView {
+export default class Menu extends SmartView {
   constructor(menuItem) {
     super();
     this._menuItem = menuItem;

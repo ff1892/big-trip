@@ -32,9 +32,6 @@ export default class Trip {
     this._handleModelEvent = this._handleModelEvent.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
 
-    this._pointsModel.addObserver(this._handleModelEvent);
-    this._filterModel.addObserver(this._handleModelEvent);
-
     this._pointNewPresenter = new PointNewPresenter(this._listComponent, this._handleViewAction);
     this._pointPresenter = new Map();
   }
@@ -43,17 +40,29 @@ export default class Trip {
     this._offerData = offerData;
     this._destinationData = destinationData;
 
+    this._pointsModel.addObserver(this._handleModelEvent);
+    this._filterModel.addObserver(this._handleModelEvent);
+
     this._renderBoard();
   }
 
-  createPoint() {
+  destroy(){
+    this._clearBoard({resetSortingType: true});
+
+    remove(this._listComponent);
+
+    this._pointsModel.removeObserver(this._handleModelEvent);
+    this._filterModel.removeObserver(this._handleModelEvent);
+  }
+
+  createPoint(callback) {
     this._currentSortingType = SortingType.DEFAULT;
     this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
     if (!this._getPoints().length) {
       remove(this._noPointsComponent);
       render(this._tripEventsSection, this._listComponent, RenderPosition.BEFOREEND);
     }
-    this._pointNewPresenter.init(POINT_BLANK, this._offerData, this._destinationData);
+    this._pointNewPresenter.init(POINT_BLANK, this._offerData, this._destinationData, callback);
   }
 
   _getPoints() {
