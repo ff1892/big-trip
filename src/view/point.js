@@ -53,7 +53,7 @@ const createPointTemplate = (point) => {
             ${getTimefromDate(dateTo)}
           </time>
         </p>
-        <p class="event__duration">${getHumanizedDuration(dateFrom, dateTo)}</p>
+        <p class="event__duration">${getHumanizedDuration(point)}</p>
       </div>
       <p class="event__price">
         &euro;&nbsp;<span class="event__price-value">${price}</span>

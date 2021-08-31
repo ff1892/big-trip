@@ -9,6 +9,7 @@ import TripPresenter from './presenter/trip.js';
 import MenuPresenter from './presenter/menu.js';
 import StatsView from './view/stats.js';
 import {render, RenderPosition} from './utils/render.js';
+import './utils/stats.js';
 
 const pageBody = document.querySelector('.page-body');
 const pageBodyContainer = pageBody.querySelector('main .page-body__container');
