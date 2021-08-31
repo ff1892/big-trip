@@ -43,6 +43,5 @@ export default class Menu {
   reset() {
     this._currentMenu = MenuItem.TABLE;
     this.init(this._clickTableHandler, this._clickStatsHandler);
-    this._clickTableHandler();
   }
 }
