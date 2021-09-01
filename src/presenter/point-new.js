@@ -9,16 +9,19 @@ export default class PointNew {
     this._buttonNewPoint = document.querySelector('.trip-main__event-add-btn');
 
     this._pointEditComponent = null;
+    this._resetCallback = null;
 
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._handleCloseClick = this._handleCloseClick.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
   }
 
-  init(point, offerData, destinationData) {
+  init(point, offerData, destinationData, callback) {
     if (this._pointEditComponent !== null) {
       return;
     }
+
+    this._resetCallback = callback;
 
     this._pointEditComponent = new PointEditView(point, offerData, destinationData, true);
     this._pointEditComponent.setSubmitHandler(this._handleFormSubmit);
@@ -28,6 +31,10 @@ export default class PointNew {
     render(this._listContainer, this._pointEditComponent, RenderPosition.AFTERBEGIN);
 
     document.addEventListener('keydown', this._escKeyDownHandler);
+
+    if (this._resetCallback !== null) {
+      this._resetCallback();
+    }
   }
 
   destroy() {

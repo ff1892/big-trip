@@ -5,9 +5,14 @@ dayjs.extend(duration);
 const MINUTES_IN_HOUR = 60;
 const MINUTES_IN_DAY = MINUTES_IN_HOUR * 24;
 
-export const getHumanizedDuration = (startDate, endDate) => {
-  const eventInMinutes = dayjs(endDate).diff(startDate, 'minutes');
-  const eventDuration = dayjs.duration(dayjs(endDate).diff(startDate));
+export const getDiff = (point) => {
+  const {dateFrom, dateTo} = point;
+  return dayjs(dateTo).diff(dateFrom);
+};
+
+export const getHumanizedTimeDiff = (diff) => {
+  const eventInMinutes = dayjs.duration(diff).asMinutes();
+  const eventDuration = dayjs.duration(diff);
   let dateFormat = 'mm[M]';
 
   if (eventInMinutes > MINUTES_IN_DAY) {
@@ -17,6 +22,11 @@ export const getHumanizedDuration = (startDate, endDate) => {
   }
 
   return eventDuration.format(`${dateFormat}`);
+};
+
+export const getHumanizedDuration = (point) => {
+  const timeDiff = getDiff(point);
+  return getHumanizedTimeDiff(timeDiff);
 };
 
 export const getNumeralDate = (date) => dayjs(date).format('DD/MM/YY HH:mm');
