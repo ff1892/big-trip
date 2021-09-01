@@ -11,12 +11,11 @@ export default class Menu {
     this._handleMenuClick = this._handleMenuClick.bind(this);
   }
 
-  init(clickTableHandler, clickStatsHandler) {
+  init(menuClickHandler) {
     const prevMenuComponent = this._menuComponent;
     this._menuComponent = new MenuView(this._currentMenu);
     this._menuComponent.setMenuClickHandler(this._handleMenuClick);
-    this._clickTableHandler = clickTableHandler;
-    this._clickStatsHandler = clickStatsHandler;
+    this._menuClickHandler = menuClickHandler;
 
     if (prevMenuComponent === null) {
       render(this._tripMenuContainer, this._menuComponent, RenderPosition.BEFOREEND);
@@ -28,20 +27,13 @@ export default class Menu {
   }
 
   _handleMenuClick(menuItem) {
-    switch (menuItem) {
-      case MenuItem.TABLE:
-        this._clickTableHandler();
-        break;
-      case MenuItem.STATS:
-        this._clickStatsHandler();
-        break;
-    }
     this._currentMenu = menuItem;
-    this.init(this._clickTableHandler, this._clickStatsHandler);
+    this._menuClickHandler(this._currentMenu);
+
+    this.init(this._menuClickHandler);
   }
 
   reset() {
-    this._currentMenu = MenuItem.TABLE;
-    this.init(this._clickTableHandler, this._clickStatsHandler);
+    this._handleMenuClick(MenuItem.TABLE);
   }
 }

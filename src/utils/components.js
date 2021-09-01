@@ -34,3 +34,25 @@ const getPointPrice = (point) => {
 };
 
 export const getTotalPrice = (points) => points.reduce((initialTotal, point) => initialTotal + getPointPrice(point), 0);
+
+export const handlePseudo = (removePseudo = true) => {
+  const containers = document.querySelectorAll('.page-body__container');
+
+  if (removePseudo) {
+    containers.forEach((container) => container.classList.add('hidden-pseudo'));
+    return;
+  }
+
+  containers.forEach((container) => container.classList.remove('hidden-pseudo'));
+};
+
+export const handleFilters = (disable = true) => {
+  const filters = document.querySelectorAll('.trip-filters__filter-input');
+
+  if(disable) {
+    filters.forEach((filter) => filter.disabled = true);
+    return;
+  }
+
+  filters.forEach((filter) => filter.disabled = false);
+};

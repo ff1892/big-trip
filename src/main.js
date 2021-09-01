@@ -8,8 +8,9 @@ import FilterPresenter from './presenter/filter.js';
 import TripPresenter from './presenter/trip.js';
 import MenuPresenter from './presenter/menu.js';
 import StatsView from './view/stats.js';
-import {render, RenderPosition} from './utils/render.js';
-import './utils/stats.js';
+import {remove, render, RenderPosition} from './utils/render.js';
+import {MenuItem} from './const.js';
+import {handlePseudo, handleFilters} from './utils/components.js';
 
 const pageBody = document.querySelector('.page-body');
 const pageBodyContainer = pageBody.querySelector('main .page-body__container');
@@ -24,22 +25,33 @@ const menu = new MenuPresenter();
 const filter = new FilterPresenter(filterModel, pointsModel);
 const trip = new TripPresenter(pageBody, pointsModel, filterModel);
 
-const handleClickMenuTable = () => {
-  trip.destroy();
-  trip.init(offerData, destinationData);
-};
+let statsComponent = null;
 
-const handleClickMenuStats = () => {
-  trip.destroy();
+const menuClickHandler = (menuItem) => {
+  switch (menuItem) {
+    case MenuItem.STATS:
+      trip.destroy();
+      statsComponent = new StatsView(pointsModel.getPoints());
+      render(pageBodyContainer, statsComponent, RenderPosition.BEFOREEND);
+      handlePseudo();
+      handleFilters();
+      break;
+    case MenuItem.TABLE:
+      trip.destroy();
+      trip.init(offerData, destinationData);
+      remove(statsComponent);
+      handlePseudo(false);
+      handleFilters(false);
+      break;
+  }
 };
 
 const initApp = () => {
   tripInfo.init();
-  menu.init(handleClickMenuTable, handleClickMenuStats);
+  menu.init(menuClickHandler);
   filter.init();
   trip.init(offerData, destinationData);
-  // const statsComponent = new StatsView();
-  // render(pageBodyContainer, statsComponent, RenderPosition.BEFOREEND);
+
   document.querySelector('.trip-main__event-add-btn').addEventListener('click', (evt) => {
     evt.preventDefault();
     trip.createPoint(menu.reset());

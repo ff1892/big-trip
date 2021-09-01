@@ -1,4 +1,4 @@
-import {getDiff, getHumanizedTimeDiff} from './time.js';
+import {getDiff} from './time.js';
 
 
 const getUniqeTypes = (points) => {
@@ -52,10 +52,5 @@ export const getDurationForAllTypes = (points) => {
   uniqeTypes.forEach((type) => durationForAllTypes
     .set(type, getTypeTotalDuration(points, type)));
 
-  const sortedDurationForAllTypes = sortMapByValueDown(durationForAllTypes);
-  durationForAllTypes.clear();
-
-  sortedDurationForAllTypes.forEach((value, key) => durationForAllTypes
-    .set(key, getHumanizedTimeDiff(value)));
-  return durationForAllTypes;
+  return sortMapByValueDown(durationForAllTypes);
 };

@@ -49,8 +49,6 @@ export default class Trip {
   destroy(){
     this._clearBoard({resetSortingType: true});
 
-    remove(this._listComponent);
-
     this._pointsModel.removeObserver(this._handleModelEvent);
     this._filterModel.removeObserver(this._handleModelEvent);
   }

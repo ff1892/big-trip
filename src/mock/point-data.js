@@ -6,8 +6,8 @@ import {EVENT_TYPES, offerData, getChoosenOffers} from './point-offer.js';
 
 const MIN_PRICE = 1;
 const MAX_PRICE = 200;
-const DAYS_GAP = 7;
-const HOURS_GAP = 8;
+const DAYS_GAP = 1;
+const HOURS_GAP = 3;
 const MINUTES_GAP = 50;
 const POINTS_COUNT = 5;
 
