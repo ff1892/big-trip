@@ -1,5 +1,6 @@
-import {offerData} from './mock/point-offer.js';
-import {destinationData} from './mock/point-destination.js';
+import {MenuItem, UpdateType} from './const.js';
+import {remove, render, RenderPosition} from './utils/render.js';
+import {handlePseudo, handleFilters} from './utils/components.js';
 import PointsModel from './model/points.js';
 import DestinationsModel from './model/destinations.js';
 import OffersModel from './model/offers.js';
@@ -9,9 +10,6 @@ import FilterPresenter from './presenter/filter.js';
 import TripPresenter from './presenter/trip.js';
 import MenuPresenter from './presenter/menu.js';
 import StatsView from './view/stats.js';
-import {remove, render, RenderPosition} from './utils/render.js';
-import {MenuItem, UpdateType} from './const.js';
-import {handlePseudo, handleFilters} from './utils/components.js';
 import Api from './api.js';
 
 const END_POINT = 'https://14.ecmascript.pages.academy/big-trip';
@@ -22,8 +20,8 @@ const pageBody = document.querySelector('.page-body');
 const pageBodyContainer = pageBody.querySelector('main .page-body__container');
 
 const pointsModel = new PointsModel();
-const destinationsModel = new DestinationsModel();
 const offersModel = new OffersModel();
+const destinationsModel = new DestinationsModel();
 const filterModel = new FilterModel();
 
 const tripInfo = new TripInfoPresenter(pageBody, pointsModel);
@@ -44,7 +42,7 @@ const menuClickHandler = (menuItem) => {
       break;
     case MenuItem.TABLE:
       trip.destroy();
-      trip.init(offerData, destinationData);
+      trip.init(offersModel, destinationsModel);
       remove(statsComponent);
       handlePseudo(false);
       handleFilters(false);
@@ -52,20 +50,23 @@ const menuClickHandler = (menuItem) => {
   }
 };
 
-api.getPoints()
-  .then((points) => {
+api.getData()
+  .then((data) => {
+    const [points, offers, destinations] = data;
+
     pointsModel.setPoints(UpdateType.INIT, points);
-    console.log(pointsModel.getPoints());
+    offersModel.setOffers(offers);
+    destinationsModel.setDestinations(destinations);
   })
-  .catch(() => {
-    pointsModel.setPoints(UpdateType.INIT, []);
+  .catch((error) => {
+    throw new Error(error);
   });
 
 const initApp = () => {
   tripInfo.init();
   menu.init(menuClickHandler);
   filter.init();
-  trip.init(offerData, destinationData);
+  trip.init(offersModel, destinationsModel);
 
   document.querySelector('.trip-main__event-add-btn').addEventListener('click', (evt) => {
     evt.preventDefault();

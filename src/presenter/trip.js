@@ -39,10 +39,9 @@ export default class Trip {
     this._pointPresenter = new Map();
   }
 
-  init(offerData, destinationData) {
-    this._offerData = offerData;
-    this._destinationData = destinationData;
-
+  init(offersModel, destinationsModel) {
+    this._offerData = offersModel.getOffers();
+    this._destinationData = destinationsModel.getDestinations();
     this._pointsModel.addObserver(this._handleModelEvent);
     this._filterModel.addObserver(this._handleModelEvent);
 
@@ -51,7 +50,6 @@ export default class Trip {
 
   destroy(){
     this._clearBoard({resetSortingType: true});
-
     this._pointsModel.removeObserver(this._handleModelEvent);
     this._filterModel.removeObserver(this._handleModelEvent);
   }

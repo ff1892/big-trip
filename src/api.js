@@ -1,3 +1,4 @@
+import { UpdateType } from './const';
 import PointsModel from './model/points';
 
 const Method = {
@@ -42,6 +43,23 @@ export default class Api {
   getDestinations() {
     return this._load({url: DataUrl.DESTINATIONS})
     .then(Api.toJSON);
+  }
+
+  getData() {
+    return Promise.all([
+      this.getPoints()
+        .catch(() => {
+          UpdateType.INIT, []
+        }),
+      this.getOffers()
+        .catch((error) => {
+          throw new Error(error)
+        }),
+      ,this.getDestinations()
+        .catch((error) => {
+          throw new Error(error)
+        }),
+    ]);
   }
 
   _load({
