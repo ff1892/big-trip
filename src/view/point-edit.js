@@ -62,7 +62,7 @@ const createPicturesTemplate = (picturesList) => {
 };
 
 const createDestinationTemplate = (destination) => (
-    `<section class="event__section  event__section--destination">
+  `<section class="event__section  event__section--destination">
     <h3 class="event__section-title  event__section-title--destination">Destination</h3>
     <p class="event__destination-description">${destination.description}</p>
     ${createPicturesTemplate(destination.pictures)}
@@ -220,7 +220,7 @@ export default class PointEdit extends SmartView {
   _nameChangeHandler(evt) {
     if (this._destinations.includes(evt.target.value)) {
       const currentDestination = this._destinationData
-      .find((destination) => destination.name === evt.target.value);
+        .find((destination) => destination.name === evt.target.value);
 
       this.updateData({
         destination: currentDestination,

@@ -57,9 +57,6 @@ api.getData()
     pointsModel.setPoints(UpdateType.INIT, points);
     offersModel.setOffers(offers);
     destinationsModel.setDestinations(destinations);
-  })
-  .catch((error) => {
-    throw new Error(error);
   });
 
 const initApp = () => {

@@ -1,4 +1,4 @@
-import { UpdateType } from './const';
+// import { UpdateType } from './const';
 import PointsModel from './model/points';
 
 const Method = {
@@ -42,22 +42,21 @@ export default class Api {
 
   getDestinations() {
     return this._load({url: DataUrl.DESTINATIONS})
-    .then(Api.toJSON);
+      .then(Api.toJSON);
   }
 
   getData() {
+    // eslint-disable-next-line no-sparse-arrays
     return Promise.all([
       this.getPoints()
-        .catch(() => {
-          UpdateType.INIT, []
-        }),
+        .catch(() => []),
       this.getOffers()
         .catch((error) => {
-          throw new Error(error)
+          throw new Error(error);
         }),
       ,this.getDestinations()
         .catch((error) => {
-          throw new Error(error)
+          throw new Error(error);
         }),
     ]);
   }
