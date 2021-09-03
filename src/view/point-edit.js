@@ -7,7 +7,6 @@ import SmartView from './smart.js';
 import {getNumeralDate} from '../utils/time.js';
 import {getLastWordFromString} from '../utils/components.js';
 import {POINT_TYPES} from '../const.js';
-import {DESTINATIONS} from '../mock/point-destination.js';
 
 const DatepickerSettings = {
   enableTime: true,
@@ -62,16 +61,13 @@ const createPicturesTemplate = (picturesList) => {
     </div>`;
 };
 
-const createDestinationTemplate = (city, destinationData) => {
-  const currentDestination = destinationData.find((destination) => destination.name === city);
-  return !(currentDestination.description.length || currentDestination.pictures.length)
-    ? ''
-    : `<section class="event__section  event__section--destination">
+const createDestinationTemplate = (destination) => (
+    `<section class="event__section  event__section--destination">
     <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-    <p class="event__destination-description">${currentDestination.description}</p>
-    ${createPicturesTemplate(currentDestination.pictures)}
-    </section>`;
-};
+    <p class="event__destination-description">${destination.description}</p>
+    ${createPicturesTemplate(destination.pictures)}
+    </section>`
+);
 
 const createDestinationListTemplate = (destinationsList, id) => {
   const destinationList = destinationsList.map((destinationItem) =>
@@ -105,11 +101,12 @@ const createPointEditTemplate = (point, offerData, destinationData, isNew) => {
   const destinationNames = destinationData.map((destinationItem) => destinationItem.name);
 
   const offersListTemplate = createOffersListTemplate(type, id, offers, offerData);
-  const destinationTemplate = destination
-    ? createDestinationTemplate(destination.name, destinationData)
-    : '';
   const destinationListTemplate = createDestinationListTemplate(destinationNames, id);
   const typeListTemplate = createTypeListTemplate(POINT_TYPES, id, type);
+
+  const destinationTemplate = destination
+    ? createDestinationTemplate(destination)
+    : '';
 
   return `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
@@ -183,6 +180,7 @@ export default class PointEdit extends SmartView {
     this._data = PointEdit.parsePointToData(point);
     this._offerData = offerData;
     this._destinationData = destinationData;
+    this._destinations = destinationData.map((destination) => destination.name);
     this._isNew = isNew;
     this._datepickerStart = null;
     this._datepickerEnd = null;
@@ -220,12 +218,14 @@ export default class PointEdit extends SmartView {
   }
 
   _nameChangeHandler(evt) {
-    if (DESTINATIONS.includes(evt.target.value)) {
+    if (this._destinations.includes(evt.target.value)) {
+      const currentDestination = this._destinationData
+      .find((destination) => destination.name === evt.target.value);
+
       this.updateData({
-        destination: {
-          name: evt.target.value,
-        },
+        destination: currentDestination,
       });
+
       return;
     }
     this.getElement()

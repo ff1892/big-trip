@@ -122,8 +122,6 @@ export default class Trip {
       return;
     }
 
-    // console.log(this._getPoints());
-
     if (!this._getPoints().length) {
       this._renderNoPoints();
       return;

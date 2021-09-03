@@ -34,6 +34,16 @@ export default class Api {
       .then(PointsModel.adaptToClient);
   }
 
+  getOffers() {
+    return this._load({url: DataUrl.OFFERS})
+      .then(Api.toJSON);
+  }
+
+  getDestinations() {
+    return this._load({url: DataUrl.DESTINATIONS})
+    .then(Api.toJSON);
+  }
+
   _load({
     url,
     method = Method.GET,

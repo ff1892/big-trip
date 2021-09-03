@@ -1,6 +1,8 @@
 import {offerData} from './mock/point-offer.js';
 import {destinationData} from './mock/point-destination.js';
 import PointsModel from './model/points.js';
+import DestinationsModel from './model/destinations.js';
+import OffersModel from './model/offers.js';
 import FilterModel from './model/filter.js';
 import TripInfoPresenter from './presenter/trip-info.js';
 import FilterPresenter from './presenter/filter.js';
@@ -12,7 +14,7 @@ import {MenuItem, UpdateType} from './const.js';
 import {handlePseudo, handleFilters} from './utils/components.js';
 import Api from './api.js';
 
-const END_POINT = 'https://15.ecmascript.pages.academy/big-trip';
+const END_POINT = 'https://14.ecmascript.pages.academy/big-trip';
 const AUTHORIZATION = 'Basic S2Vrc0ZvcmV2ZXI6cXdlcnR5';
 const api = new Api(END_POINT, AUTHORIZATION);
 
@@ -20,6 +22,8 @@ const pageBody = document.querySelector('.page-body');
 const pageBodyContainer = pageBody.querySelector('main .page-body__container');
 
 const pointsModel = new PointsModel();
+const destinationsModel = new DestinationsModel();
+const offersModel = new OffersModel();
 const filterModel = new FilterModel();
 
 const tripInfo = new TripInfoPresenter(pageBody, pointsModel);
@@ -51,6 +55,7 @@ const menuClickHandler = (menuItem) => {
 api.getPoints()
   .then((points) => {
     pointsModel.setPoints(UpdateType.INIT, points);
+    console.log(pointsModel.getPoints());
   })
   .catch(() => {
     pointsModel.setPoints(UpdateType.INIT, []);
