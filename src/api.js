@@ -1,3 +1,5 @@
+import PointsModel from './model/points';
+
 const Method = {
   GET: 'GET',
   PUT: 'PUT',
@@ -7,13 +9,7 @@ const DataUrl = {
   POINTS: 'points',
   DESTINATIONS: 'destinations',
   OFFERS: 'offers',
-}
-
-const SuccessHTTPStatusRange = {
-  MIN: 200,
-  MAX: 299,
 };
-
 
 export default class Api {
   constructor(endPoint, authorization) {
@@ -23,17 +19,19 @@ export default class Api {
 
   getPoints() {
     return this._load({url: DataUrl.POINTS})
-      .then(Api.toJSON);
+      .then(Api.toJSON)
+      .then((points) => points.map(PointsModel.adaptToClient));
   }
 
   updatePoint(point) {
     return this._load({
       url: `${DataUrl.POINTS}/${point.id}`,
       method: Method.PUT,
-      body: JSON.stringify(point),
+      body: JSON.stringify(PointsModel.adaptToServer(point)),
       headers: new Headers({'Content-Type': 'application/json'}),
     })
-      .then(Api.toJSON);
+      .then(Api.toJSON)
+      .then(PointsModel.adaptToClient);
   }
 
   _load({

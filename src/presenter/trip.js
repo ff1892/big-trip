@@ -19,13 +19,16 @@ export default class Trip {
     this._pointsModel = pointsModel;
     this._filterModel = filterModel;
 
+    this._isLoading = true;
+
     this._currentSortingType = SortingType.DEFAULT;
+    this._filerType = FilterType.EVERYTHING;
 
     this._listComponent = new ListView();
+    this._loadingComponent = new NoPointsView(MessagesNoPoints.LOADING);
 
     this._sortingComponent = null;
     this._noPointsComponent = null;
-    this._filerType = FilterType.EVERYTHING;
 
     this._handleSortingTypeChange = this._handleSortingTypeChange.bind(this);
     this._handleViewAction = this._handleViewAction.bind(this);
@@ -105,10 +108,22 @@ export default class Trip {
         this._clearBoard({resetSortingType: true});
         this._renderBoard();
         break;
+      case UpdateType.INIT:
+        this._isLoading = false;
+        remove(this._loadingComponent);
+        this._renderBoard();
+        break;
     }
   }
 
   _renderBoard() {
+    if (this._isLoading) {
+      this._renderLoading();
+      return;
+    }
+
+    // console.log(this._getPoints());
+
     if (!this._getPoints().length) {
       this._renderNoPoints();
       return;
@@ -173,5 +188,9 @@ export default class Trip {
     }
     this._noPointsComponent = new NoPointsView(MessagesNoPoints[this._filerType]);
     render(this._tripEventsSection, this._noPointsComponent, RenderPosition.BEFOREEND);
+  }
+
+  _renderLoading() {
+    render(this._tripEventsSection, this._loadingComponent, RenderPosition.BEFOREEND);
   }
 }

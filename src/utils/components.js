@@ -6,6 +6,7 @@ export const MessagesNoPoints = {
   [FilterType.EVERYTHING]: 'Click New Event to create your first point',
   [FilterType.PAST]:'There are no past events now',
   [FilterType.FUTURE]: 'There are no future events now',
+  LOADING: 'Loading...',
 };
 
 export const getLastWordFromString = (string)=> string.split(' ').slice(-1);
