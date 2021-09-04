@@ -1,9 +1,10 @@
-// import { UpdateType } from './const';
 import PointsModel from './model/points';
 
 const Method = {
   GET: 'GET',
   PUT: 'PUT',
+  POST: 'POST',
+  DELETE: 'DELETE',
 };
 
 const DataUrl = {
@@ -33,6 +34,24 @@ export default class Api {
     })
       .then(Api.toJSON)
       .then(PointsModel.adaptToClient);
+  }
+
+  addPoint(point) {
+    return this._load({
+      url: `${DataUrl.POINTS}`,
+      method: Method.POST,
+      body: JSON.stringify(PointsModel.adaptToServer(point)),
+      headers: new Headers({'Content-Type': 'application/json'}),
+    })
+      .then(Api.toJSON)
+      .then(PointsModel.adaptToClient);
+  }
+
+  deletePoint(point) {
+    return this._load({
+      url: `${DataUrl.POINTS}/${point.id}`,
+      method: Method.DELETE,
+    });
   }
 
   getOffers() {

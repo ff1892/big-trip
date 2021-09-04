@@ -1,6 +1,6 @@
 import {MenuItem, UpdateType} from './const.js';
 import {remove, render, RenderPosition} from './utils/render.js';
-import {handlePseudo, handleFilters} from './utils/components.js';
+import {newPointButton, handlePseudo, handleFilters} from './utils/components.js';
 import PointsModel from './model/points.js';
 import DestinationsModel from './model/destinations.js';
 import OffersModel from './model/offers.js';
@@ -12,7 +12,7 @@ import MenuPresenter from './presenter/menu.js';
 import StatsView from './view/stats.js';
 import Api from './api.js';
 
-const END_POINT = 'https://14.ecmascript.pages.academy/big-trip';
+const END_POINT = 'https://15.ecmascript.pages.academy/big-trip';
 const AUTHORIZATION = 'Basic S2Vrc0ZvcmV2ZXI6cXdlcnR5';
 const api = new Api(END_POINT, AUTHORIZATION);
 
@@ -27,7 +27,7 @@ const filterModel = new FilterModel();
 const tripInfo = new TripInfoPresenter(pageBody, pointsModel);
 const menu = new MenuPresenter();
 const filter = new FilterPresenter(filterModel, pointsModel);
-const trip = new TripPresenter(pageBody, pointsModel, filterModel, offersModel, destinationsModel);
+const trip = new TripPresenter(pageBody, pointsModel, filterModel, offersModel, destinationsModel, api);
 
 let statsComponent = null;
 
@@ -65,7 +65,7 @@ const initApp = () => {
   filter.init();
   trip.init();
 
-  document.querySelector('.trip-main__event-add-btn').addEventListener('click', (evt) => {
+  newPointButton.addEventListener('click', (evt) => {
     evt.preventDefault();
     trip.createPoint(menu.reset());
   });

@@ -1,5 +1,7 @@
 import {FilterType} from '../const.js';
 
+export const newPointButton = document.querySelector('.trip-main__event-add-btn');
+
 const POINTS_TO_SHOW = 3;
 
 export const MessagesNoPoints = {

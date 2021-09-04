@@ -1,6 +1,11 @@
 import he from 'he';
 import AbstractComponentView from './abstract-component.js';
-import {getHumanizedDuration, getTimefromDate, getDateAttribute, getDateTimeAttribute, getHumanizedDate} from '../utils/time.js';
+import {getHumanizedDuration,
+  getTimefromDate,
+  getDateAttribute,
+  getDateTimeAttribute,
+  getHumanizedDate
+} from '../utils/time.js';
 
 
 const createOfferTemplate = (title, price) => (`
