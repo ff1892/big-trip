@@ -3,9 +3,12 @@ import {remove, render, RenderPosition} from '../utils/render.js';
 import {UserAction, UpdateType} from '../const.js';
 
 export default class PointNew {
-  constructor(listContainer, changeData) {
+  constructor(listContainer, changeData, point, offersModel, destinationsModel) {
     this._listContainer = listContainer;
     this._changeData = changeData;
+    this._point = point;
+    this._offersModel = offersModel;
+    this._destinationsModel = destinationsModel;
     this._buttonNewPoint = document.querySelector('.trip-main__event-add-btn');
 
     this._pointEditComponent = null;
@@ -16,14 +19,14 @@ export default class PointNew {
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
   }
 
-  init(point, offerData, destinationData, callback) {
+  init(callback) {
     if (this._pointEditComponent !== null) {
       return;
     }
 
     this._resetCallback = callback;
 
-    this._pointEditComponent = new PointEditView(point, offerData, destinationData, true);
+    this._pointEditComponent = new PointEditView(this._point, this._offersModel, this._destinationsModel, true);
     this._pointEditComponent.setSubmitHandler(this._handleFormSubmit);
     this._pointEditComponent.setDeleteClickHandler(this._handleCloseClick);
     this._buttonNewPoint.disabled = true;

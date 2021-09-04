@@ -27,7 +27,7 @@ const filterModel = new FilterModel();
 const tripInfo = new TripInfoPresenter(pageBody, pointsModel);
 const menu = new MenuPresenter();
 const filter = new FilterPresenter(filterModel, pointsModel);
-const trip = new TripPresenter(pageBody, pointsModel, filterModel);
+const trip = new TripPresenter(pageBody, pointsModel, filterModel, offersModel, destinationsModel);
 
 let statsComponent = null;
 
@@ -54,16 +54,16 @@ api.getData()
   .then((data) => {
     const [points, offers, destinations] = data;
 
-    pointsModel.setPoints(UpdateType.INIT, points);
     offersModel.setOffers(offers);
     destinationsModel.setDestinations(destinations);
+    pointsModel.setPoints(UpdateType.INIT, points);
   });
 
 const initApp = () => {
   tripInfo.init();
   menu.init(menuClickHandler);
   filter.init();
-  trip.init(offersModel, destinationsModel);
+  trip.init();
 
   document.querySelector('.trip-main__event-add-btn').addEventListener('click', (evt) => {
     evt.preventDefault();

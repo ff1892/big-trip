@@ -14,10 +14,12 @@ import NoPointsView from '../view/points-absent.js';
 import PointPresenter from './point.js';
 
 export default class Trip {
-  constructor(container, pointsModel, filterModel) {
+  constructor(container, pointsModel, filterModel, offersModel, destinationsModel) {
     this._tripEventsSection = container.querySelector('.trip-events');
     this._pointsModel = pointsModel;
     this._filterModel = filterModel;
+    this._offersModel = offersModel;
+    this._destinationsModel = destinationsModel;
 
     this._isLoading = true;
 
@@ -35,13 +37,17 @@ export default class Trip {
     this._handleModelEvent = this._handleModelEvent.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
 
-    this._pointNewPresenter = new PointNewPresenter(this._listComponent, this._handleViewAction);
+    this._pointNewPresenter = new PointNewPresenter(
+      this._listComponent,
+      this._handleViewAction,
+      POINT_BLANK,
+      this._offersModel,
+      this._destinationsModel);
+
     this._pointPresenter = new Map();
   }
 
-  init(offersModel, destinationsModel) {
-    this._offerData = offersModel.getOffers();
-    this._destinationData = destinationsModel.getDestinations();
+  init() {
     this._pointsModel.addObserver(this._handleModelEvent);
     this._filterModel.addObserver(this._handleModelEvent);
 
@@ -57,11 +63,13 @@ export default class Trip {
   createPoint(callback) {
     this._currentSortingType = SortingType.DEFAULT;
     this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+
     if (!this._getPoints().length) {
       remove(this._noPointsComponent);
       render(this._tripEventsSection, this._listComponent, RenderPosition.BEFOREEND);
     }
-    this._pointNewPresenter.init(POINT_BLANK, this._offerData, this._destinationData, callback);
+
+    this._pointNewPresenter.init(callback);
   }
 
   _getPoints() {
@@ -96,7 +104,7 @@ export default class Trip {
   _handleModelEvent(updateType, data) {
     switch(updateType) {
       case UpdateType.PATCH:
-        this._pointPresenter.get(data.id).init(data, this._offerData, this._destinationData);
+        this._pointPresenter.get(data.id).init(data);
         break;
       case UpdateType.MINOR:
         this._clearBoard();
@@ -162,8 +170,13 @@ export default class Trip {
   }
 
   _renderPoint(point) {
-    const pointPresenter = new PointPresenter(this._listComponent, this._handleViewAction, this._handleModeChange);
-    pointPresenter.init(point, this._offerData, this._destinationData);
+    const pointPresenter = new PointPresenter(
+      this._listComponent,
+      this._handleViewAction,
+      this._handleModeChange,
+      this._offersModel,
+      this._destinationsModel);
+    pointPresenter.init(point);
     this._pointPresenter.set(point.id, pointPresenter);
   }
 

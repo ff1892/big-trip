@@ -46,19 +46,14 @@ export default class Api {
   }
 
   getData() {
-    // eslint-disable-next-line no-sparse-arrays
     return Promise.all([
-      this.getPoints()
-        .catch(() => []),
-      this.getOffers()
-        .catch((error) => {
-          throw new Error(error);
-        }),
-      ,this.getDestinations()
-        .catch((error) => {
-          throw new Error(error);
-        }),
-    ]);
+      this.getPoints(),
+      this.getOffers(),
+      this.getDestinations(),
+    ])
+      .catch((error) => {
+        throw new Error(error);
+      });
   }
 
   _load({
