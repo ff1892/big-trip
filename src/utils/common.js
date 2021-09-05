@@ -10,3 +10,5 @@ export const getShuffledArray = (array) => {
   const shuffledArrayCopy = [...array];
   return shuffledArrayCopy.sort(() => getRandomInteger(0, 2) - 1);
 };
+
+export const isOnline = () => window.navigator.onLine;
