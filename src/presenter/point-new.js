@@ -3,9 +3,12 @@ import {remove, render, RenderPosition} from '../utils/render.js';
 import {UserAction, UpdateType} from '../const.js';
 
 export default class PointNew {
-  constructor(listContainer, changeData) {
+  constructor(listContainer, changeData, point, offersModel, destinationsModel) {
     this._listContainer = listContainer;
     this._changeData = changeData;
+    this._point = point;
+    this._offersModel = offersModel;
+    this._destinationsModel = destinationsModel;
     this._buttonNewPoint = document.querySelector('.trip-main__event-add-btn');
 
     this._pointEditComponent = null;
@@ -16,24 +19,23 @@ export default class PointNew {
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
   }
 
-  init(point, offerData, destinationData, callback) {
+  init(callback) {
     if (this._pointEditComponent !== null) {
       return;
     }
 
     this._resetCallback = callback;
-
-    this._pointEditComponent = new PointEditView(point, offerData, destinationData, true);
+    this._buttonNewPoint.disabled = true;
+    this._pointEditComponent = new PointEditView(this._point, this._offersModel, this._destinationsModel, true);
     this._pointEditComponent.setSubmitHandler(this._handleFormSubmit);
     this._pointEditComponent.setDeleteClickHandler(this._handleCloseClick);
-    this._buttonNewPoint.disabled = true;
 
     render(this._listContainer, this._pointEditComponent, RenderPosition.AFTERBEGIN);
 
     document.addEventListener('keydown', this._escKeyDownHandler);
 
     if (this._resetCallback !== null) {
-      this._resetCallback();
+      this._resetCallback;
     }
   }
 
@@ -48,15 +50,31 @@ export default class PointNew {
     document.removeEventListener('keydown', this._escKeyDownHandler);
   }
 
-  _handleFormSubmit(point) {
-    this._id = (Math.random() + 1).toString(36).substring(7);
+  setSaving() {
+    this._pointEditComponent.updateData({
+      isDisabled: true,
+      isSaving: true,
+    });
+  }
 
+  setAborting() {
+    const resetFormState = () => {
+      this._pointEditComponent.updateData({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+
+    this._pointEditComponent.shake(resetFormState);
+  }
+
+  _handleFormSubmit(point) {
     this._changeData(
       UserAction.ADD_POINT,
       UpdateType.MINOR,
-      Object.assign({id: this._id}, point),
+      point,
     );
-    this.destroy();
   }
 
   _handleCloseClick(){

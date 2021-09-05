@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-const duration = require('dayjs/plugin/duration'); // eslint-disable-line
+import duration from 'dayjs/plugin/duration';
 dayjs.extend(duration);
 
 const MINUTES_IN_HOUR = 60;
