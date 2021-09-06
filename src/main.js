@@ -1,4 +1,4 @@
-import {MenuItem, UpdateType} from './const.js';
+import {MenuItem, UpdateType, StoreName} from './const.js';
 import {remove, render, RenderPosition} from './utils/render.js';
 import {newPointButton, handlePseudo, handleFilters} from './utils/components.js';
 import PointsModel from './model/points.js';
@@ -14,15 +14,14 @@ import Api from './api/api.js';
 import Store from './api/store.js';
 import Provider from './api/provider.js';
 
-const END_POINT = 'https://14.ecmascript.pages.academy/big-trip';
+const END_POINT = 'https://13.ecmascript.pages.academy/big-trip';
 const AUTHORIZATION = 'Basic S2Vrc0ZvcmV2ZXI6cXdlcnR5';
-const STORE_PREFIX = 'bigtrip-localstorage';
-const STORE_VER = 'v15';
-const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
 
+const storePoints = new Store(StoreName.POINTS, window.localStorage);
+const storeOffers = new Store(StoreName.OFFERS, window.localStorage);
+const storeDestinations = new Store(StoreName.DESTINATIONS, window.localStorage);
 const api = new Api(END_POINT, AUTHORIZATION);
-const store = new Store(STORE_NAME, window.localStorage);
-const apiWithProvider = new Provider(api, store);
+const apiWithProvider = new Provider(api, storePoints, storeOffers, storeDestinations);
 
 const pageBody = document.querySelector('.page-body');
 const pageBodyContainer = pageBody.querySelector('main .page-body__container');

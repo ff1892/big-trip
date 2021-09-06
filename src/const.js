@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 
 const EVENT_DEFAULT = 'flight';
+const STORE_VER = 'v14';
 
 export const POINT_BLANK =  {
   type: EVENT_DEFAULT,
@@ -45,4 +46,10 @@ export const FilterType = {
 export const MenuItem = {
   TABLE: 'TABLE',
   STATS: 'STATS',
+};
+
+export const StoreName = {
+  POINTS: `bigtrip-points-localstorage-${STORE_VER}`,
+  OFFERS: `bigtrip-offers-localstorage-${STORE_VER}`,
+  DESTINATIONS: `bigtrip-destinations-localstorage-${STORE_VER}`,
 };
