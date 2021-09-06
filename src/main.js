@@ -1,6 +1,7 @@
 import {MenuItem, UpdateType, StoreName} from './const.js';
 import {remove, render, RenderPosition} from './utils/render.js';
 import {newPointButton, handlePseudo, handleFilters} from './utils/components.js';
+import {toast} from './utils/toast.js';
 import PointsModel from './model/points.js';
 import DestinationsModel from './model/destinations.js';
 import OffersModel from './model/offers.js';
@@ -91,4 +92,5 @@ window.addEventListener('online', () => {
 
 window.addEventListener('offline', () => {
   document.title += ' [offline]';
+  toast('No Internet connection...');
 });
