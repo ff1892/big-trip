@@ -1,6 +1,6 @@
 const CACHE_PREFIX = 'bigtrip-cache';
 const CACHE_VER = 'v15';
-const CACHE_NAME = `${CACHE_PREFIX}/${CACHE_VER}`;
+const CACHE_NAME = `${CACHE_PREFIX}-${CACHE_VER}`;
 
 const HTTP_STATUS_OK = 200;
 const RESPONSE_SAFE_TYPE = 'basic';
@@ -46,8 +46,8 @@ self.addEventListener('activate', (evt) => {
                 return caches.delete(key);
               }
               return null;
-          })
-          .filter((key) => key !== null),
+            })
+            .filter((key) => key !== null),
         ),
       ),
   );

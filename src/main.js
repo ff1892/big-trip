@@ -10,11 +10,19 @@ import FilterPresenter from './presenter/filter.js';
 import TripPresenter from './presenter/trip.js';
 import MenuPresenter from './presenter/menu.js';
 import StatsView from './view/stats.js';
-import Api from './api.js';
+import Api from './api/api.js';
+import Store from './api/store.js';
+import Provider from './api/provider.js';
 
-const END_POINT = 'https://15.ecmascript.pages.academy/big-trip';
+const END_POINT = 'https://14.ecmascript.pages.academy/big-trip';
 const AUTHORIZATION = 'Basic S2Vrc0ZvcmV2ZXI6cXdlcnR5';
+const STORE_PREFIX = 'bigtrip-localstorage';
+const STORE_VER = 'v15';
+const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
+
 const api = new Api(END_POINT, AUTHORIZATION);
+const store = new Store(STORE_NAME, window.localStorage);
+const apiWithProvider = new Provider(api, store);
 
 const pageBody = document.querySelector('.page-body');
 const pageBodyContainer = pageBody.querySelector('main .page-body__container');
@@ -27,7 +35,7 @@ const filterModel = new FilterModel();
 const tripInfo = new TripInfoPresenter(pageBody, pointsModel);
 const menu = new MenuPresenter();
 const filter = new FilterPresenter(filterModel, pointsModel);
-const trip = new TripPresenter(pageBody, pointsModel, filterModel, offersModel, destinationsModel, api);
+const trip = new TripPresenter(pageBody, pointsModel, filterModel, offersModel, destinationsModel, apiWithProvider);
 
 let statsComponent = null;
 
@@ -50,7 +58,7 @@ const menuClickHandler = (menuItem) => {
   }
 };
 
-api.getData()
+apiWithProvider.getData()
   .then((data) => {
     const [points, offers, destinations] = data;
 
@@ -72,3 +80,16 @@ const initApp = () => {
 };
 
 initApp();
+
+window.addEventListener('load', () => {
+  navigator.serviceWorker.register('/sw.js');
+});
+
+window.addEventListener('online', () => {
+  document.title = document.title.replace(' [offline]', '');
+  apiWithProvider.sync();
+});
+
+window.addEventListener('offline', () => {
+  document.title += ' [offline]';
+});

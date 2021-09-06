@@ -1,8 +1,9 @@
 import {remove, render, RenderPosition} from '../utils/render.js';
 import {newPointButton, MessagesNoPoints} from '../utils/components.js';
-import {filter} from '../utils/sort-filter.js';
-import {sortPointsByTimeDown, sortPointsByPriceDown, sortPointsByDayUp} from '../utils/sort-filter.js';
+import {filter, sortPointsByTimeDown, sortPointsByPriceDown, sortPointsByDayUp} from '../utils/sort-filter.js';
 import {SortingType, UserAction, UpdateType, FilterType, POINT_BLANK} from '../const.js';
+import {isOnline} from '../utils/common.js';
+import {toast} from '../utils/toast.js';
 
 import SortingView from '../view/sorting.js';
 import ListView from '../view/list.js';
@@ -60,6 +61,10 @@ export default class Trip {
   }
 
   createPoint(callback) {
+    if (!isOnline()) {
+      toast('You can\'t create new point offline');
+      return;
+    }
     this._currentSortingType = SortingType.DEFAULT;
     this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
 

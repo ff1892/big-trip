@@ -32,6 +32,43 @@ export default class Provider {
     return Promise.resolve(storePoints.map(PointsModel.adaptToClient));
   }
 
+  getOffers() {
+    if(isOnline()) {
+      return this._api.getOffers()
+        .then((offers) => {
+          this._store.setItems(offers);
+          return offers;
+        });
+    }
+
+    const storeOffers = Object.values(this._store.getItems());
+    return Promise.resolve(storeOffers);
+  }
+
+  getDestinations() {
+    if(isOnline()) {
+      return this._api.getDestinations()
+        .then((destinations) => {
+          this._store.setItems(destinations);
+          return destinations;
+        });
+    }
+
+    const storeDestinations = Object.values(this._store.getItems());
+    return Promise.resolve(storeDestinations);
+  }
+
+  getData() {
+    return Promise.all([
+      this.getPoints(),
+      this.getOffers(),
+      this.getDestinations(),
+    ])
+      .catch((error) => {
+        throw new Error(error);
+      });
+  }
+
   updatePoint(point) {
     if (isOnline()) {
       return this._api.updatePoint(point)
