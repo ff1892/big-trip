@@ -1,6 +1,7 @@
 import SmartView from './smart.js';
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import {BackgroundColorChart} from '../const.js';
 import {getPriceForAllTypes, getTypeTotalCount, getDurationForAllTypes} from '../utils/stats.js';
 import {getHumanizedTimeDiff} from '../utils/time.js';
 
@@ -10,6 +11,8 @@ const renderPriceChart = (priceCtx, points) => {
   const priceForAllTypes = getPriceForAllTypes(points);
   const types = [...priceForAllTypes.keys()].map((value) => value.toUpperCase());
   const prices = [...priceForAllTypes.values()];
+  const backgroundColors = types.map((type) => BackgroundColorChart[type.toLowerCase()]);
+  const backgroundColorsHover = backgroundColors.map((color) => `${color.slice(0, color.length - 6)})`);
 
   return new Chart(priceCtx, {
     plugins: [ChartDataLabels],
@@ -18,8 +21,8 @@ const renderPriceChart = (priceCtx, points) => {
       labels: types,
       datasets: [{
         data: prices,
-        backgroundColor: '#ffffff',
-        hoverBackgroundColor: '#ffffff',
+        backgroundColor: backgroundColors,
+        hoverBackgroundColor: backgroundColorsHover,
         anchor: 'start',
       }],
     },
@@ -81,6 +84,8 @@ const renderTypesCountChart = (typeCtx, points) => {
   const typeTotalCount = getTypeTotalCount(points);
   const types = [...typeTotalCount.keys()].map((value) => value.toUpperCase());
   const counts = [...typeTotalCount.values()];
+  const backgroundColors = types.map((type) => BackgroundColorChart[type.toLowerCase()]);
+  const backgroundColorsHover = backgroundColors.map((color) => `${color.slice(0, color.length - 6)})`);
 
 
   return new Chart(typeCtx, {
@@ -90,8 +95,8 @@ const renderTypesCountChart = (typeCtx, points) => {
       labels: types,
       datasets: [{
         data: counts,
-        backgroundColor: '#ffffff',
-        hoverBackgroundColor: '#ffffff',
+        backgroundColor: backgroundColors,
+        hoverBackgroundColor: backgroundColorsHover,
         anchor: 'start',
       }],
     },
@@ -153,6 +158,8 @@ const renderTimeChart = (timeCtx, points) => {
   const timeForAllTypes = getDurationForAllTypes(points);
   const types = [...timeForAllTypes.keys()].map((value) => value.toUpperCase());
   const times = [...timeForAllTypes.values()];
+  const backgroundColors = types.map((type) => BackgroundColorChart[type.toLowerCase()]);
+  const backgroundColorsHover = backgroundColors.map((color) => `${color.slice(0, color.length - 6)})`);
 
   return new Chart(timeCtx, {
     plugins: [ChartDataLabels],
@@ -161,8 +168,8 @@ const renderTimeChart = (timeCtx, points) => {
       labels: types,
       datasets: [{
         data: times,
-        backgroundColor: '#ffffff',
-        hoverBackgroundColor: '#ffffff',
+        backgroundColor: backgroundColors,
+        hoverBackgroundColor: backgroundColorsHover,
         anchor: 'start',
       }],
     },

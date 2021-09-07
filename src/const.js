@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 
 const EVENT_DEFAULT = 'flight';
+const STORE_VER = 'v14';
 
 export const POINT_BLANK =  {
   type: EVENT_DEFAULT,
@@ -21,7 +22,20 @@ export const SortingType = {
 export const POINT_TYPES = [
   'taxi', 'bus', 'train', 'ship',
   'drive', 'flight', 'check-in',
-  'sightseeing', 'restaurant'];
+  'sightseeing', 'restaurant', 'transport'];
+
+export const BackgroundColorChart = {
+  taxi: 'rgba(247, 253, 4, 0.7)',
+  bus: 'rgba(249, 132, 4, 0.7)',
+  train: 'rgba(246, 174, 153, 0.7)',
+  ship: 'rgba(61, 178, 255, 0.7)',
+  drive: 'rgba(18, 93, 152, 0.7)',
+  flight: 'rgba(57, 162, 219, 0.7)',
+  ['check-in']: 'rgba(222, 186, 157, 0.7)',
+  sightseeing: 'rgba(121, 180, 183, 0.7)',
+  restaurant: 'rgba(191, 216, 184, 0.7)',
+  transport: 'rgba(221, 221, 221, 0.7)',
+};
 
 export const UserAction = {
   UPDATE_POINT: 'UPDATE POINT',
@@ -45,4 +59,10 @@ export const FilterType = {
 export const MenuItem = {
   TABLE: 'TABLE',
   STATS: 'STATS',
+};
+
+export const StoreName = {
+  POINTS: `bigtrip-points-localstorage-${STORE_VER}`,
+  OFFERS: `bigtrip-offers-localstorage-${STORE_VER}`,
+  DESTINATIONS: `bigtrip-destinations-localstorage-${STORE_VER}`,
 };
