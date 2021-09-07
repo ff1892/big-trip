@@ -7,6 +7,7 @@ import SmartView from './smart.js';
 import {getNumeralDate} from '../utils/time.js';
 import {getLastWordFromString} from '../utils/components.js';
 import {POINT_TYPES} from '../const.js';
+import {toast} from '../utils/toast';
 
 const DatepickerSettings = {
   enableTime: true,
@@ -275,17 +276,17 @@ export default class PointEdit extends SmartView {
   }
 
   _priceChangeHandler(evt) {
-    const inputValue = parseInt(evt.target.value, 10);
+    const inputValue = Number(evt.target.value);
     const saveButton = this.getElement().querySelector('.event__save-btn');
 
-    if (inputValue) {
+    if (inputValue === Math.floor(inputValue) && inputValue >= 0) {
       saveButton.disabled = false;
       this.updateData({
         price: inputValue,
       }, true);
       return;
     }
-
+    toast('Please enter positive integer number');
     saveButton.disabled = true;
   }
 

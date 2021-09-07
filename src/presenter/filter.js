@@ -1,5 +1,6 @@
 import {UpdateType} from '../const.js';
 import {render, replace, remove, RenderPosition} from '../utils/render.js';
+import {filter} from '../utils/sort-filter.js';
 import FilterView from '../view/filters.js';
 
 export default class Filter {
@@ -30,6 +31,16 @@ export default class Filter {
 
     replace(this._filterComponent, prevFilterComponent);
     remove(prevFilterComponent);
+
+    const points = this._pointsModel.getPoints();
+
+    this._filterComponent.getElement().querySelectorAll('input')
+      .forEach((currentFilter) => {
+        const filteredPoints = filter[currentFilter.value](points);
+        if(!filteredPoints.length) {
+          currentFilter.disabled = true;
+        }
+      });
   }
 
   _handleModelEvent() {

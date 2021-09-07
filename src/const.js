@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 
 const EVENT_DEFAULT = 'flight';
-const STORE_VER = 'v14';
+const STORE_VER = 'v15';
 
 export const POINT_BLANK =  {
   type: EVENT_DEFAULT,
