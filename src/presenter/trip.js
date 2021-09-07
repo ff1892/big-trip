@@ -1,9 +1,9 @@
+import {SortingType, UserAction, UpdateType, FilterType, POINT_BLANK} from '../const.js';
 import {remove, render, RenderPosition} from '../utils/render.js';
 import {newPointButton, MessagesNoPoints} from '../utils/components.js';
 import {filter, sortPointsByTimeDown, sortPointsByPriceDown, sortPointsByDayUp} from '../utils/sort-filter.js';
-import {SortingType, UserAction, UpdateType, FilterType, POINT_BLANK} from '../const.js';
-import {isOnline} from '../utils/common.js';
 import {toast} from '../utils/toast.js';
+import {isOnline} from '../utils/common.js';
 
 import SortingView from '../view/sorting.js';
 import ListView from '../view/list.js';

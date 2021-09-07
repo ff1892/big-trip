@@ -138,7 +138,9 @@ const createPointEditTemplate = (point, offerData, destinationData, isNew) => {
         <div class="event__type-wrapper">
           <label class="event__type  event__type-btn" for="event-type-toggle-${id}">
             <span class="visually-hidden">Choose event type</span>
-            <img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="${type[0].toUpperCase() + type.slice(1)} type icon">
+            <img class="event__type-icon" width="17" height="17"
+              src="img/icons/${type}.png"
+              alt="${type[0].toUpperCase() + type.slice(1)} type icon">
           </label>
           <input class="event__type-toggle  visually-hidden"
             id="event-type-toggle-${id}"
@@ -218,6 +220,7 @@ const createPointEditTemplate = (point, offerData, destinationData, isNew) => {
 export default class PointEdit extends SmartView {
   constructor(point, offersModel, destinationsModel, isNew = false) {
     super();
+
     this._data = PointEdit.parsePointToData(point);
     this._offerData = offersModel.getOffers();
     this._destinationData = destinationsModel.getDestinations();
@@ -270,6 +273,7 @@ export default class PointEdit extends SmartView {
 
       return;
     }
+
     this.getElement()
       .querySelector('.event__save-btn')
       .disabled = true;
@@ -286,6 +290,7 @@ export default class PointEdit extends SmartView {
       }, true);
       return;
     }
+
     toast('Please enter positive integer number');
     saveButton.disabled = true;
   }
@@ -380,8 +385,8 @@ export default class PointEdit extends SmartView {
         dateTo: userDate,
       });
 
-      this.getElement().querySelector('.event__save-btn')
-        .setAttribute('disabled', 'disabled');
+      this.getElement()
+        .querySelector('.event__save-btn').disabled = true;
     }
   }
 
