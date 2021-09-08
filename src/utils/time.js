@@ -2,25 +2,24 @@ import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 dayjs.extend(duration);
 
-const MINUTES_IN_HOUR = 60;
-const MINUTES_IN_DAY = MINUTES_IN_HOUR * 24;
-
 export const getDiff = (point) => {
   const {dateFrom, dateTo} = point;
   return dayjs(dateTo).diff(dateFrom);
 };
 
 export const getHumanizedTimeDiff = (diff) => {
-  const eventInMinutes = dayjs.duration(diff).asMinutes();
   const eventDuration = dayjs.duration(diff);
   let dateFormat = 'mm[M]';
 
-  if (eventInMinutes > MINUTES_IN_DAY) {
+  if (eventDuration.asDays() >= 1) {
     dateFormat = 'DD[D] HH[H] mm[M]';
-  } else if (eventInMinutes > MINUTES_IN_HOUR) {
+  } else if (eventDuration.asHours() >= 1) {
     dateFormat = 'HH[H] mm[M]';
   }
 
+  if (eventDuration.asDays() >= 30) {
+    return '> 30D';
+  }
   return eventDuration.format(`${dateFormat}`);
 };
 

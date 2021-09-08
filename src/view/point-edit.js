@@ -5,9 +5,7 @@ import dayjs from 'dayjs';
 
 import SmartView from './smart.js';
 import {getNumeralDate} from '../utils/time.js';
-import {getLastWordFromString} from '../utils/components.js';
 import {POINT_TYPES} from '../const.js';
-import {toast} from '../utils/toast';
 
 const DatepickerSettings = {
   enableTime: true,
@@ -18,15 +16,15 @@ const DatepickerSettings = {
 const createOfferTemplate = (id, offer, offers, isDisabled) => (
   `<div class="event__offer-selector">
   <input class="event__offer-checkbox visually-hidden"
-  id="event-offer-${getLastWordFromString(offer.title)}-${id}"
+  id="event-offer-${offer.title}-${id}"
   type="checkbox"
-  name="event-offer-${getLastWordFromString(offer.title)}"
+  name="event-offer-${offer.title}"
   ${offers.find((currentOffer) => currentOffer.title === offer.title) ? 'checked' : ''}
   data-id="${offer.title}"
   ${isDisabled ? 'disabled' : ''}>
 
   <label class="event__offer-label"
-  for="event-offer-${getLastWordFromString(offer.title)}-${id}">
+  for="event-offer-${offer.title}-${id}">
     <span class="event__offer-title">${offer.title}</span>
     &plus;&euro;&nbsp;
     <span class="event__offer-price">${offer.price}</span>
@@ -91,7 +89,7 @@ const createTypeTemplate = (pointType, id, type, isDisabled) => (
     >
     <label class="event__type-label  event__type-label--${pointType}"
       for="event-type-${pointType}-${id}">
-      ${pointType[0].toUpperCase() + pointType.slice(1)}
+      ${pointType[0].toUpperCase()}${pointType.slice(1)}
     </label>
   </div>`
 );
@@ -140,7 +138,7 @@ const createPointEditTemplate = (point, offerData, destinationData, isNew) => {
             <span class="visually-hidden">Choose event type</span>
             <img class="event__type-icon" width="17" height="17"
               src="img/icons/${type}.png"
-              alt="${type[0].toUpperCase() + type.slice(1)} type icon">
+              alt="${type[0].toUpperCase()}${type.slice(1)} type icon">
           </label>
           <input class="event__type-toggle  visually-hidden"
             id="event-type-toggle-${id}"
@@ -291,7 +289,6 @@ export default class PointEdit extends SmartView {
       return;
     }
 
-    toast('Please enter positive integer number');
     saveButton.disabled = true;
   }
 

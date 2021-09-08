@@ -43,7 +43,7 @@ const createPointTemplate = (point) => {
         <img class="event__type-icon"
           width="42" height="42"
           src="img/icons/${type}.png"
-          alt="${type[0].toUpperCase() + type.slice(1)} icon">
+          alt="${type[0].toUpperCase()}${type.slice(1)} icon">
       </div>
       <h3 class="event__title">${type} ${he.encode(name)}</h3>
       <div class="event__schedule">

@@ -11,8 +11,6 @@ export const MessagesNoPoints = {
   LOADING: 'Loading...',
 };
 
-export const getLastWordFromString = (string)=> string.split(' ').slice(-1);
-
 export const createDestinationsTemplate = (points) => {
   const firstDestination = points[0].destination.name;
   const lastDestination = points[points.length - 1].destination.name;
