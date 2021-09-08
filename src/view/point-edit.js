@@ -5,7 +5,6 @@ import dayjs from 'dayjs';
 
 import SmartView from './smart.js';
 import {getNumeralDate} from '../utils/time.js';
-import {getLastWordFromString} from '../utils/components.js';
 import {POINT_TYPES} from '../const.js';
 
 const DatepickerSettings = {
@@ -17,15 +16,15 @@ const DatepickerSettings = {
 const createOfferTemplate = (id, offer, offers, isDisabled) => (
   `<div class="event__offer-selector">
   <input class="event__offer-checkbox visually-hidden"
-  id="event-offer-${getLastWordFromString(offer.title)}-${id}"
+  id="event-offer-${offer.title}-${id}"
   type="checkbox"
-  name="event-offer-${getLastWordFromString(offer.title)}"
+  name="event-offer-${offer.title}"
   ${offers.find((currentOffer) => currentOffer.title === offer.title) ? 'checked' : ''}
   data-id="${offer.title}"
   ${isDisabled ? 'disabled' : ''}>
 
   <label class="event__offer-label"
-  for="event-offer-${getLastWordFromString(offer.title)}-${id}">
+  for="event-offer-${offer.title}-${id}">
     <span class="event__offer-title">${offer.title}</span>
     &plus;&euro;&nbsp;
     <span class="event__offer-price">${offer.price}</span>
@@ -90,7 +89,7 @@ const createTypeTemplate = (pointType, id, type, isDisabled) => (
     >
     <label class="event__type-label  event__type-label--${pointType}"
       for="event-type-${pointType}-${id}">
-      ${pointType[0].toUpperCase() + pointType.slice(1)}
+      ${pointType[0].toUpperCase()}${pointType.slice(1)}
     </label>
   </div>`
 );
@@ -137,7 +136,9 @@ const createPointEditTemplate = (point, offerData, destinationData, isNew) => {
         <div class="event__type-wrapper">
           <label class="event__type  event__type-btn" for="event-type-toggle-${id}">
             <span class="visually-hidden">Choose event type</span>
-            <img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="${type[0].toUpperCase() + type.slice(1)} type icon">
+            <img class="event__type-icon" width="17" height="17"
+              src="img/icons/${type}.png"
+              alt="${type[0].toUpperCase()}${type.slice(1)} type icon">
           </label>
           <input class="event__type-toggle  visually-hidden"
             id="event-type-toggle-${id}"
@@ -217,6 +218,7 @@ const createPointEditTemplate = (point, offerData, destinationData, isNew) => {
 export default class PointEdit extends SmartView {
   constructor(point, offersModel, destinationsModel, isNew = false) {
     super();
+
     this._data = PointEdit.parsePointToData(point);
     this._offerData = offersModel.getOffers();
     this._destinationData = destinationsModel.getDestinations();
@@ -269,16 +271,17 @@ export default class PointEdit extends SmartView {
 
       return;
     }
+
     this.getElement()
       .querySelector('.event__save-btn')
       .disabled = true;
   }
 
   _priceChangeHandler(evt) {
-    const inputValue = parseInt(evt.target.value, 10);
+    const inputValue = Number(evt.target.value);
     const saveButton = this.getElement().querySelector('.event__save-btn');
 
-    if (inputValue) {
+    if (inputValue === Math.floor(inputValue) && inputValue >= 0) {
       saveButton.disabled = false;
       this.updateData({
         price: inputValue,
@@ -379,8 +382,8 @@ export default class PointEdit extends SmartView {
         dateTo: userDate,
       });
 
-      this.getElement().querySelector('.event__save-btn')
-        .setAttribute('disabled', 'disabled');
+      this.getElement()
+        .querySelector('.event__save-btn').disabled = true;
     }
   }
 

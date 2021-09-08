@@ -41,9 +41,9 @@ export default class TripInfo {
     remove(prevTripInfoComponent);
   }
 
-  // eslint-disable-next-line no-unused-vars
   _handleModelEvent(update, data) {
     if (update !== UpdateType.PATCH) {
+      data;
       this.init();
     }
   }

@@ -2,20 +2,24 @@ import {MenuItem, UpdateType, StoreName} from './const.js';
 import {remove, render, RenderPosition} from './utils/render.js';
 import {newPointButton, handlePseudo, handleFilters} from './utils/components.js';
 import {toast} from './utils/toast.js';
+
 import PointsModel from './model/points.js';
 import DestinationsModel from './model/destinations.js';
 import OffersModel from './model/offers.js';
 import FilterModel from './model/filter.js';
+
 import TripInfoPresenter from './presenter/trip-info.js';
 import FilterPresenter from './presenter/filter.js';
 import TripPresenter from './presenter/trip.js';
 import MenuPresenter from './presenter/menu.js';
+
 import StatsView from './view/stats.js';
+
 import Api from './api/api.js';
 import Store from './api/store.js';
 import Provider from './api/provider.js';
 
-const END_POINT = 'https://13.ecmascript.pages.academy/big-trip';
+const END_POINT = 'https://14.ecmascript.pages.academy/big-trip';
 const AUTHORIZATION = 'Basic S2Vrc0ZvcmV2ZXI6cXdlcnR5';
 
 const storePoints = new Store(StoreName.POINTS, window.localStorage);
