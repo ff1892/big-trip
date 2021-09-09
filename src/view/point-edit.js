@@ -281,7 +281,7 @@ export default class PointEdit extends SmartView {
     const inputValue = Number(evt.target.value);
     const saveButton = this.getElement().querySelector('.event__save-btn');
 
-    if (inputValue === Math.floor(inputValue) && inputValue >= 0) {
+    if (inputValue === Math.floor(inputValue) && inputValue >= 1) {
       saveButton.disabled = false;
       this.updateData({
         price: inputValue,
