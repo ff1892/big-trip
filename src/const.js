@@ -5,7 +5,7 @@ const STORE_VER = 'v15';
 
 export const POINT_BLANK =  {
   type: EVENT_DEFAULT,
-  price: 0,
+  price: '',
   dateFrom: dayjs().toDate(),
   dateTo: dayjs().toDate(),
   isFavorite: false,
