@@ -29,8 +29,8 @@ export const getHumanizedDuration = (point) => {
 };
 
 export const getNumeralDate = (date) => dayjs(date).format('DD/MM/YY HH:mm');
-export const getTimefromDate = (date) => dayjs(date).format('HH:mm');
-export const getDayfromDate = (date) => dayjs(date).format('DD');
+export const getTimeFromDate = (date) => dayjs(date).format('HH:mm');
+export const getDayFromDate = (date) => dayjs(date).format('DD');
 export const getHumanizedDate = (date) => dayjs(date).format('MMM DD').toUpperCase();
 export const getDateAttribute = (date) => dayjs(date).format('YYYY-MM-DD');
 export const getDateTimeAttribute = (date) => dayjs(date).format('YYYY-MM-DDTHH:mm');
@@ -47,7 +47,7 @@ export const createDurationTemplate = (points) => {
   }
 
   if (isInSameMonth(firstDate, secondDate)) {
-    return `${getHumanizedDate(firstDate)} &mdash; ${getDayfromDate(secondDate)}`;
+    return `${getHumanizedDate(firstDate)} &mdash; ${getDayFromDate(secondDate)}`;
   }
 
   return `${getHumanizedDate(firstDate)} &mdash; ${getHumanizedDate(secondDate)}`;
