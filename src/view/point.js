@@ -1,7 +1,7 @@
 import he from 'he';
 import AbstractComponentView from './abstract-component.js';
 import {getHumanizedDuration,
-  getTimefromDate,
+  getTimeFromDate,
   getDateAttribute,
   getDateTimeAttribute,
   getHumanizedDate
@@ -50,12 +50,12 @@ const createPointTemplate = (point) => {
         <p class="event__time">
           <time class="event__start-time"
             datetime="${getDateTimeAttribute(dateFrom)}">
-            ${getTimefromDate(dateFrom)}
+            ${getTimeFromDate(dateFrom)}
           </time>
           &mdash;
           <time class="event__end-time"
             datetime="${getDateTimeAttribute(dateTo)}">
-            ${getTimefromDate(dateTo)}
+            ${getTimeFromDate(dateTo)}
           </time>
         </p>
         <p class="event__duration">${getHumanizedDuration(point)}</p>

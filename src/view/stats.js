@@ -249,7 +249,7 @@ export default class Stats extends SmartView {
   constructor(points) {
     super();
     this._data = points;
-    this._uniqePoints = getTypeTotalCount(this._data).size;
+    this._uniquePoints = getTypeTotalCount(this._data).size;
 
     this._resetCharts();
     this._setCharts();
@@ -286,9 +286,9 @@ export default class Stats extends SmartView {
     const typeCtx = this.getElement().querySelector('#type');
     const timeCtx = this.getElement().querySelector('#time-spend');
 
-    moneyCtx.height = BAR_HEIGHT * this._uniqePoints;
-    typeCtx.height = BAR_HEIGHT * this._uniqePoints;
-    timeCtx.height = BAR_HEIGHT * this._uniqePoints;
+    moneyCtx.height = BAR_HEIGHT * this._uniquePoints;
+    typeCtx.height = BAR_HEIGHT * this._uniquePoints;
+    timeCtx.height = BAR_HEIGHT * this._uniquePoints;
 
     this._priceChart = renderPriceChart(moneyCtx, this._data);
     this._typeChart = renderTypesCountChart(typeCtx, this._data);

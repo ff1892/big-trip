@@ -1,5 +1,6 @@
 import PointEditView from '../view/point-edit.js';
 import {remove, render, RenderPosition} from '../utils/render.js';
+import {isEscapeEvent} from '../utils/common.js';
 import {UserAction, UpdateType} from '../const.js';
 
 export default class PointNew {
@@ -82,7 +83,7 @@ export default class PointNew {
   }
 
   _escKeyDownHandler(evt) {
-    if (evt.key === 'Escape' || evt.key === 'Esc') {
+    if (isEscapeEvent(evt)) {
       evt.preventDefault();
       this.destroy();
     }
