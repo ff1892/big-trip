@@ -1,10 +1,10 @@
 import {getDiff} from './time.js';
 
 
-const getUniqeTypes = (points) => {
-  const uniqeTypes = new Set();
-  points.forEach((point) => uniqeTypes.add(point.type));
-  return uniqeTypes;
+const getUniqueTypes = (points) => {
+  const uniqueTypes = new Set();
+  points.forEach((point) => uniqueTypes.add(point.type));
+  return uniqueTypes;
 };
 
 const getPointByType = (points, type) => points.filter((point) => point.type === type);
@@ -26,30 +26,30 @@ const getTypeTotalDuration = (points, type) => {
 };
 
 export const getPriceForAllTypes = (points) => {
-  const uniqeTypes = getUniqeTypes(points);
+  const uniqueTypes = getUniqueTypes(points);
   const priceForAllTypes = new Map();
 
-  uniqeTypes.forEach((type) => priceForAllTypes
+  uniqueTypes.forEach((type) => priceForAllTypes
     .set(type, getTypeTotalPrice(points, type)));
 
   return sortMapByValueDown(priceForAllTypes);
 };
 
 export const getTypeTotalCount = (points) => {
-  const uniqeTypes = getUniqeTypes(points);
+  const uniqueTypes = getUniqueTypes(points);
   const typeTotalCount = new Map();
 
-  uniqeTypes.forEach((type) => typeTotalCount
+  uniqueTypes.forEach((type) => typeTotalCount
     .set(type, getPointByType(points, type).length));
 
   return sortMapByValueDown(typeTotalCount);
 };
 
 export const getDurationForAllTypes = (points) => {
-  const uniqeTypes = getUniqeTypes(points);
+  const uniqueTypes = getUniqueTypes(points);
   const durationForAllTypes = new Map();
 
-  uniqeTypes.forEach((type) => durationForAllTypes
+  uniqueTypes.forEach((type) => durationForAllTypes
     .set(type, getTypeTotalDuration(points, type)));
 
   return sortMapByValueDown(durationForAllTypes);
