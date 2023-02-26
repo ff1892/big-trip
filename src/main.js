@@ -19,7 +19,7 @@ import Api from './api/api.js';
 import Store from './api/store.js';
 import Provider from './api/provider.js';
 
-const END_POINT = 'https://14.ecmascript.pages.academy/big-trip';
+const END_POINT = 'https://16.ecmascript.pages.academy/big-trip';
 const AUTHORIZATION = 'Basic S2Vrc0ZvcmV2ZXI6cXdlcnR5';
 
 const storePoints = new Store(StoreName.POINTS, window.localStorage);
